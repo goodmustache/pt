@@ -6,6 +6,7 @@ import (
 	. "github.com/goodmustache/pt/config"
 
 	. "github.com/onsi/ginkgo"
+	. "github.com/onsi/ginkgo/extensions/table"
 	. "github.com/onsi/gomega"
 )
 
@@ -31,6 +32,12 @@ var _ = Describe("Config", func() {
 				"name": "Henry Allen 'Hank' Venture",
 				"api_token": "22222222222222222222222222222222",
 				"alias": "hv"
+			},
+			{
+				"id": 47,
+				"username": "bsamson",
+				"name": "Brock Samson",
+				"api_token": "FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF"
 			}
 		]
 	}`)
@@ -41,57 +48,96 @@ var _ = Describe("Config", func() {
 			Users: []User{
 				{
 					ID:       45,
-					APIToken: "11111111111111111111111111111111",
-					Name:     "Dean Venture",
 					Username: "dventure",
+					Name:     "Dean Venture",
+					APIToken: "11111111111111111111111111111111",
 					Alias:    "dv",
 				},
 				{
 					ID:       46,
-					APIToken: "22222222222222222222222222222222",
-					Name:     "Henry Allen 'Hank' Venture",
 					Username: "hventure",
+					Name:     "Henry Allen 'Hank' Venture",
+					APIToken: "22222222222222222222222222222222",
 					Alias:    "hv",
+				},
+				{
+					ID:       47,
+					Username: "bsamson",
+					Name:     "Brock Samson",
+					APIToken: "FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF",
 				},
 			},
 		}
 	})
 
 	Describe("AddUser", func() {
-		var user User
-		BeforeEach(func() {
-			user = User{
-				ID:       47,
+		DescribeTable("adds the user",
+			func(alias string) {
+				newUser := User{
+					ID:       48,
+					APIToken: "ffffffffffffffffffffffffffffffff",
+					Name:     "Dermott Fictel",
+					Username: "TheWolf",
+					Alias:    alias,
+				}
+				err := parsedConfig.AddUser(newUser.ID, newUser.APIToken, newUser.Name, newUser.Username, newUser.Alias)
+				Expect(err).ToNot(HaveOccurred())
+
+				Expect(parsedConfig.Users).To(HaveLen(4))
+				Expect(parsedConfig.Users[3]).To(Equal(newUser))
+			},
+
+			Entry("with an alias", "tw"),
+			Entry("without an alias", ""),
+		)
+
+		It("overrides user if id already exists", func() {
+			newUser := User{
+				ID:       45,
 				APIToken: "ffffffffffffffffffffffffffffffff",
 				Name:     "Dermott Fictel",
 				Username: "TheWolf",
 				Alias:    "tw",
 			}
-		})
 
-		It("adds the user", func() {
-			err := parsedConfig.AddUser(user.ID, user.APIToken, user.Name, user.Username, user.Alias)
+			err := parsedConfig.AddUser(newUser.ID, newUser.APIToken, newUser.Name, newUser.Username, newUser.Alias)
 			Expect(err).ToNot(HaveOccurred())
 
 			Expect(parsedConfig.Users).To(HaveLen(3))
-			Expect(parsedConfig.Users[2]).To(Equal(user))
+			Expect(parsedConfig.Users[2]).To(Equal(newUser))
 		})
 
-		It("overrides user if id already exists", func() {
-			user.ID = 46
+		DescribeTable("validating errors get returned when",
+			func(setup func() (User, Config, error)) {
+				newUser, config, expectedError := setup()
+				err := config.AddUser(newUser.ID, newUser.APIToken, newUser.Name, newUser.Username, newUser.Alias)
+				Expect(err).To(MatchError(expectedError))
+			},
 
-			err := parsedConfig.AddUser(user.ID, user.APIToken, user.Name, user.Username, user.Alias)
-			Expect(err).ToNot(HaveOccurred())
+			Entry("new user has the same alias as a previous user", func() (User, Config, error) {
+				user := User{ID: 45, Username: "dventure", Alias: "dv"}
+				newUser := User{ID: 46, Username: "dhventure", Alias: user.Alias}
+				config := Config{Users: []User{user}}
+				err := DuplicateAliasError{User: user}
+				return newUser, config, err
+			}),
 
-			Expect(parsedConfig.Users).To(HaveLen(2))
-			Expect(parsedConfig.Users[1]).To(Equal(user))
-		})
+			Entry("new user has the same username as a previous user's alias", func() (User, Config, error) {
+				user := User{ID: 45, Username: "dventure", Alias: "dv"}
+				newUser := User{ID: 46, Username: user.Alias, Alias: "dunmatter"}
+				config := Config{Users: []User{user}}
+				err := UsernameMatchesSavedAliasError{SavedUser: user, NewUser: newUser}
+				return newUser, config, err
+			}),
 
-		It("errors when alias already exists", func() {
-			originalUser := parsedConfig.Users[0]
-			err := parsedConfig.AddUser(user.ID, user.APIToken, user.Name, user.Username, originalUser.Alias)
-			Expect(err).To(MatchError(DuplicateAliasError{User: originalUser}))
-		})
+			Entry("new user has the same alias as a previous user's username", func() (User, Config, error) {
+				user := User{ID: 45, Username: "dventure", Alias: "dv"}
+				newUser := User{ID: 46, Username: "dhventure", Alias: user.Username}
+				config := Config{Users: []User{user}}
+				err := AliasMatchesSavedUsernameError{SavedUser: user, NewUser: newUser}
+				return newUser, config, err
+			}),
+		)
 	})
 
 	Describe("SetCurrentUser", func() {

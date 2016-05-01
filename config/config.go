@@ -36,8 +36,13 @@ func (config *Config) AddUser(id uint64, apiToken string, name string, username 
 	}
 
 	for _, savedUser := range config.Users {
-		if savedUser.Alias == newUser.Alias {
+		switch {
+		case newUser.Alias != "" && savedUser.Alias == newUser.Alias:
 			return DuplicateAliasError{User: savedUser}
+		case savedUser.Alias == newUser.Username:
+			return UsernameMatchesSavedAliasError{SavedUser: savedUser, NewUser: newUser}
+		case savedUser.Username == newUser.Alias:
+			return AliasMatchesSavedUsernameError{SavedUser: savedUser, NewUser: newUser}
 		}
 	}
 
