@@ -17,6 +17,7 @@ const AddUserInstructions = `In order to add a user, you must provide an API Tok
 
 type AddUserCommand struct {
 	APIToken flags.APIToken `long:"api-token" describe:"API Token for a user"`
+	Alias    string         `short:"a" long:"alias" describe:"Alias to assign user"`
 }
 
 func (cmd *AddUserCommand) Execute([]string) error {
@@ -49,7 +50,7 @@ func (cmd *AddUserCommand) Execute([]string) error {
 		return err
 	}
 
-	err = config.AddUser(tokenInfo.ID, tokenInfo.APIToken, tokenInfo.Name, tokenInfo.Username, "")
+	err = config.AddUser(tokenInfo.ID, tokenInfo.APIToken, tokenInfo.Name, tokenInfo.Username, cmd.Alias)
 	if err != nil {
 		return err
 	}
