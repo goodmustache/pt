@@ -23,14 +23,14 @@ var _ = Describe("Config", func() {
 				"username": "dventure",
 				"name": "Dean Venture",
 				"api_token": "11111111111111111111111111111111",
-				"aliases": ["dv"]
+				"alias": "dv"
 			},
 			{
 				"id": 46,
 				"username": "hventure",
 				"name": "Henry Allen 'Hank' Venture",
 				"api_token": "22222222222222222222222222222222",
-				"aliases": ["hv", "hav"]
+				"alias": "hv"
 			}
 		]
 	}`)
@@ -44,14 +44,14 @@ var _ = Describe("Config", func() {
 					APIToken: "11111111111111111111111111111111",
 					Name:     "Dean Venture",
 					Username: "dventure",
-					Aliases:  []string{"dv"},
+					Alias:    "dv",
 				},
 				{
 					ID:       46,
 					APIToken: "22222222222222222222222222222222",
 					Name:     "Henry Allen 'Hank' Venture",
 					Username: "hventure",
-					Aliases:  []string{"hv", "hav"},
+					Alias:    "hv",
 				},
 			},
 		}
@@ -65,12 +65,12 @@ var _ = Describe("Config", func() {
 				APIToken: "ffffffffffffffffffffffffffffffff",
 				Name:     "Dermott Fictel",
 				Username: "TheWolf",
-				Aliases:  []string{"tw", "fs"},
+				Alias:    "tw",
 			}
 		})
 
 		It("adds the user", func() {
-			err := parsedConfig.AddUser(user.ID, user.APIToken, user.Name, user.Username, user.Aliases)
+			err := parsedConfig.AddUser(user.ID, user.APIToken, user.Name, user.Username, user.Alias)
 			Expect(err).ToNot(HaveOccurred())
 
 			Expect(parsedConfig.Users).To(HaveLen(3))
@@ -80,7 +80,7 @@ var _ = Describe("Config", func() {
 		It("overrides user if id already exists", func() {
 			user.ID = 46
 
-			err := parsedConfig.AddUser(user.ID, user.APIToken, user.Name, user.Username, user.Aliases)
+			err := parsedConfig.AddUser(user.ID, user.APIToken, user.Name, user.Username, user.Alias)
 			Expect(err).ToNot(HaveOccurred())
 
 			Expect(parsedConfig.Users).To(HaveLen(2))
@@ -89,9 +89,7 @@ var _ = Describe("Config", func() {
 
 		It("errors when alias already exists", func() {
 			originalUser := parsedConfig.Users[0]
-			user.Aliases = append(user.Aliases, originalUser.Aliases[0])
-
-			err := parsedConfig.AddUser(user.ID, user.APIToken, user.Name, user.Username, user.Aliases)
+			err := parsedConfig.AddUser(user.ID, user.APIToken, user.Name, user.Username, originalUser.Alias)
 			Expect(err).To(MatchError(DuplicateAliasError{User: originalUser}))
 		})
 	})

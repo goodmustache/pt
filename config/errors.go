@@ -3,7 +3,6 @@ package config
 import (
 	"errors"
 	"fmt"
-	"strings"
 )
 
 var UserDoesNotExistError = errors.New("Specified user does not exist in config.")
@@ -13,5 +12,5 @@ type DuplicateAliasError struct {
 }
 
 func (e DuplicateAliasError) Error() string {
-	return fmt.Sprintf("Alias provided is already in use by %s (aliases: %s)", e.User.Name, strings.Join(e.User.Aliases, ", "))
+	return fmt.Sprintf("Alias provided is already in use by %s (alias: %s)", e.User.Name, e.User.Alias)
 }

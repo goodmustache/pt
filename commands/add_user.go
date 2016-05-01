@@ -49,7 +49,7 @@ func (cmd *AddUserCommand) Execute([]string) error {
 		return err
 	}
 
-	err = config.AddUser(tokenInfo.ID, tokenInfo.APIToken, tokenInfo.Name, tokenInfo.Username, []string{})
+	err = config.AddUser(tokenInfo.ID, tokenInfo.APIToken, tokenInfo.Name, tokenInfo.Username, "")
 	if err != nil {
 		return err
 	}

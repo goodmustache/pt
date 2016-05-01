@@ -12,40 +12,36 @@ type Config struct {
 }
 
 type User struct {
-	ID       uint64   `json:"id"`
-	APIToken string   `json:"api_token"`
-	Name     string   `json:"name"`
-	Username string   `json:"username"`
-	Aliases  []string `json:"aliases,omitempty"`
+	ID       uint64 `json:"id"`
+	APIToken string `json:"api_token"`
+	Name     string `json:"name"`
+	Username string `json:"username"`
+	Alias    string `json:"alias,omitempty"`
 }
 
-func (config *Config) AddUser(id uint64, apiToken string, name string, username string, aliases []string) error {
-	user := User{
+func (config *Config) AddUser(id uint64, apiToken string, name string, username string, alias string) error {
+	newUser := User{
 		ID:       id,
 		APIToken: apiToken,
 		Name:     name,
 		Username: username,
-		Aliases:  aliases,
+		Alias:    alias,
 	}
 
 	for i, savedUser := range config.Users {
-		if savedUser.ID == user.ID {
+		if savedUser.ID == newUser.ID {
 			config.Users = append(config.Users[:i], config.Users[i+1:]...)
 			break
 		}
 	}
 
 	for _, savedUser := range config.Users {
-		for _, savedAlias := range savedUser.Aliases {
-			for _, alias := range aliases {
-				if savedAlias == alias {
-					return DuplicateAliasError{User: savedUser}
-				}
-			}
+		if savedUser.Alias == newUser.Alias {
+			return DuplicateAliasError{User: savedUser}
 		}
 	}
 
-	config.Users = append(config.Users, user)
+	config.Users = append(config.Users, newUser)
 	return nil
 }
 
