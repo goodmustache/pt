@@ -87,22 +87,6 @@ var _ = Describe("Config", func() {
 			Expect(parsedConfig.Users[1]).To(Equal(user))
 		})
 
-		Context("when the API token is invalid", func() {
-			It("errors due to invalid characters", func() {
-				user.APIToken = "f@fffQffffffffffffffffffff$fffff"
-
-				err := parsedConfig.AddUser(user.ID, user.APIToken, user.Name, user.Username, user.Aliases)
-				Expect(err).To(Equal(InvalidAPITokenError))
-			})
-
-			It("errors due to invalid size", func() {
-				user.APIToken = "f"
-
-				err := parsedConfig.AddUser(user.ID, user.APIToken, user.Name, user.Username, user.Aliases)
-				Expect(err).To(Equal(InvalidAPITokenError))
-			})
-		})
-
 		It("errors when alias already exists", func() {
 			originalUser := parsedConfig.Users[0]
 			user.Aliases = append(user.Aliases, originalUser.Aliases[0])

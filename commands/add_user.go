@@ -5,6 +5,7 @@ import (
 	"os"
 
 	"github.com/goodmustache/pt/commands/internal"
+	"github.com/goodmustache/pt/commands/internal/flags"
 	"github.com/goodmustache/pt/tracker"
 	"github.com/vito/go-interact/interact"
 )
@@ -15,20 +16,29 @@ const AddUserInstructions = `In order to add a user, you must provide an API Tok
 `
 
 type AddUserCommand struct {
-	APIToken string `long:"api-token" describe:"API Token for a user"`
+	APIToken flags.APIToken `long:"api-token" describe:"API Token for a user"`
 }
 
 func (cmd *AddUserCommand) Execute([]string) error {
-	if cmd.APIToken == "" {
+	apiToken := cmd.APIToken.Value
+
+	if cmd.APIToken.Value == "" {
 		fmt.Print(AddUserInstructions)
 
-		err := interact.NewInteraction("API Token").Resolve(interact.Required(&cmd.APIToken))
+		var input string
+		err := interact.NewInteraction("API Token").Resolve(interact.Required(&input))
+		if err != nil {
+			return err
+		}
+
+		apiToken = tracker.APIToken(input)
+		err = apiToken.Validate()
 		if err != nil {
 			return err
 		}
 	}
 
-	client := tracker.NewTrackerClient(PT.TrackerURL, cmd.APIToken)
+	client := tracker.NewTrackerClient(PT.TrackerURL, apiToken)
 	tokenInfo, err := client.TokenInfo()
 	if err != nil {
 		return err

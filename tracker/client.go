@@ -11,11 +11,11 @@ type TrackerClient interface {
 
 type client struct {
 	APIURL     string
-	APIToken   string
+	APIToken   APIToken
 	httpClient *http.Client
 }
 
-func NewTrackerClient(apiURL string, apiToken string) TrackerClient {
+func NewTrackerClient(apiURL string, apiToken APIToken) TrackerClient {
 	return &client{
 		APIURL:     apiURL,
 		APIToken:   apiToken,
@@ -29,7 +29,7 @@ func (c client) get(uri string) ([]byte, error) {
 		return nil, err
 	}
 
-	request.Header.Add("X-TrackerToken", c.APIToken)
+	c.APIToken.AddToRequestHeader(request)
 	response, err := c.httpClient.Do(request)
 	if err != nil {
 		return nil, err

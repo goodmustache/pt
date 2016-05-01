@@ -2,7 +2,6 @@ package config
 
 import (
 	"encoding/json"
-	"regexp"
 	"time"
 )
 
@@ -21,15 +20,6 @@ type User struct {
 }
 
 func (config *Config) AddUser(id uint64, apiToken string, name string, username string, aliases []string) error {
-	//TODO: Turn this into a flag helper
-	valid, err := regexp.MatchString("^[a-fA-F\\d]{32}$", apiToken)
-	if err != nil {
-		return err
-	}
-	if !valid {
-		return InvalidAPITokenError
-	}
-
 	user := User{
 		ID:       id,
 		APIToken: apiToken,

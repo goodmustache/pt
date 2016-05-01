@@ -6,8 +6,6 @@ import (
 	"strings"
 )
 
-var InvalidAPITokenError = errors.New("API Token must be a 32 character long hex string. (Example: '1234567890abcdef1234567890abcdef')")
-
 var UserDoesNotExistError = errors.New("Specified user does not exist in config.")
 
 type DuplicateAliasError struct {
