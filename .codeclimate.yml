@@ -2,7 +2,11 @@
 engines:
   fixme:
     enabled: true
+  golint:
+    enabled: true
+  govet:
+    enabled: true
 ratings:
-  paths: []
+  paths: "**.go"
 exclude_paths:
 - vendor/
