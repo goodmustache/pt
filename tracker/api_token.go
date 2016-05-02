@@ -8,11 +8,11 @@ import (
 
 type APIToken string
 
-var InvalidAPITokenError = errors.New("API Token must be a 32 character long hex string. (Example: '1234567890abcdef1234567890abcdef')")
+var ErrorInvalidAPIToken = errors.New("API Token must be a 32 character long hex string. (Example: '1234567890abcdef1234567890abcdef')")
 
 func (token APIToken) Validate() error {
 	if !regexp.MustCompile("^[a-fA-F\\d]{32}$").MatchString(string(token)) {
-		return InvalidAPITokenError
+		return ErrorInvalidAPIToken
 	}
 
 	return nil

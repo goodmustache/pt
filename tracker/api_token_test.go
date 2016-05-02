@@ -18,8 +18,8 @@ var _ = Describe("ApiToken", func() {
 				Expect(token.Validate()).To(Equal(err))
 			},
 
-			Entry("errors due to invalid characters", "f@fffQffffffffffffffffffff$fffff", InvalidAPITokenError),
-			Entry("errors due to invalid size", "f", InvalidAPITokenError),
+			Entry("errors due to invalid characters", "f@fffQffffffffffffffffffff$fffff", ErrorInvalidAPIToken),
+			Entry("errors due to invalid size", "f", ErrorInvalidAPIToken),
 		)
 	})
 

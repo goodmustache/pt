@@ -5,7 +5,7 @@ import (
 	"net/http"
 )
 
-type TrackerClient interface {
+type Client interface {
 	TokenInfo() (TokenInfomation, error)
 }
 
@@ -15,7 +15,7 @@ type client struct {
 	httpClient *http.Client
 }
 
-func NewTrackerClient(apiURL string, apiToken APIToken) TrackerClient {
+func NewClient(apiURL string, apiToken APIToken) Client {
 	return &client{
 		APIURL:     apiURL,
 		APIToken:   apiToken,

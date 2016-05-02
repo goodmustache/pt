@@ -39,7 +39,7 @@ func (cmd *AddUserCommand) Execute([]string) error {
 		}
 	}
 
-	client := tracker.NewTrackerClient(PT.TrackerURL, apiToken)
+	client := tracker.NewClient(PT.TrackerURL, apiToken)
 	tokenInfo, err := client.TokenInfo()
 	if err != nil {
 		return err

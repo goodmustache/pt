@@ -65,7 +65,7 @@ func (config *Config) SetCurrentUser(username string) error {
 		}
 	}
 
-	return UserDoesNotExistError
+	return ErrorUserDoesNotExist
 }
 
 func LoadConfig(rawConfig []byte) (Config, error) {

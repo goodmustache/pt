@@ -155,7 +155,7 @@ var _ = Describe("Config", func() {
 		Context("when user does not exist", func() {
 			It("errors", func() {
 				err := parsedConfig.SetCurrentUser("banana")
-				Expect(err).To(Equal(UserDoesNotExistError))
+				Expect(err).To(Equal(ErrorUserDoesNotExist))
 			})
 		})
 
