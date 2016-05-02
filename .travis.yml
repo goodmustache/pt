@@ -1,0 +1,9 @@
+language: go
+go:
+  - 1.6
+install:
+  - go get -v github.com/onsi/ginkgo/ginkgo
+script: ginkgo -r
+branches:
+  only:
+    - master

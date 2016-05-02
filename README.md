@@ -2,7 +2,7 @@
 A command line utility for [Pivotal Tracker](https://www.pivotaltracker.com/).
 
 ## Project Status
-[![Code Climate](https://codeclimate.com/github/goodmustache/pt/badges/gpa.svg)](https://codeclimate.com/github/goodmustache/pt)[![Issue Count](https://codeclimate.com/github/goodmustache/pt/badges/issue_count.svg)](https://codeclimate.com/github/goodmustache/pt)
+[![Build Status](https://travis-ci.org/goodmustache/pt.svg?branch=master)](https://travis-ci.org/goodmustache/pt) [![Code Climate](https://codeclimate.com/github/goodmustache/pt/badges/gpa.svg)](https://codeclimate.com/github/goodmustache/pt) [![Issue Count](https://codeclimate.com/github/goodmustache/pt/badges/issue_count.svg)](https://codeclimate.com/github/goodmustache/pt)
 
 ## Installation
 
