@@ -49,8 +49,5 @@ func GetUser(alias string, username string) (config.User, error) {
 			}
 		}
 		return config.User{}, ErrNoCurrentUserSet
-
 	}
-
-	return config.User{}, nil
 }
