@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/goodmustache/pt/commands/internal"
 	"github.com/goodmustache/pt/commands/internal/flags"
+	"github.com/goodmustache/pt/config"
 	"github.com/goodmustache/pt/tracker"
 	"github.com/vito/go-interact/interact"
 )
@@ -16,8 +16,8 @@ const AddUserInstructions = `In order to add a user, you must provide an API Tok
 `
 
 type AddUserCommand struct {
-	APIToken flags.APIToken `long:"api-token" describe:"API Token for a user"`
-	Alias    string         `short:"a" long:"alias" describe:"Alias to assign user"`
+	APIToken flags.APIToken `long:"api-token" description:"API Token for a user"`
+	Alias    string         `short:"a" long:"alias" description:"Alias to assign user"`
 }
 
 func (cmd *AddUserCommand) Execute([]string) error {
@@ -45,22 +45,22 @@ func (cmd *AddUserCommand) Execute([]string) error {
 		return err
 	}
 
-	config, err := internal.ReadConfig()
-	if exists := os.IsNotExist(err); !exists {
+	conf, err := config.ReadConfig()
+	if err != nil && !os.IsNotExist(err) {
 		return err
 	}
 
-	err = config.AddUser(tokenInfo.ID, tokenInfo.APIToken, tokenInfo.Name, tokenInfo.Username, cmd.Alias)
+	err = conf.AddUser(tokenInfo.ID, tokenInfo.APIToken, tokenInfo.Name, tokenInfo.Username, cmd.Alias)
 	if err != nil {
 		return err
 	}
 
-	err = config.SetCurrentUser(tokenInfo.Username)
+	err = conf.SetCurrentUser(tokenInfo.Username)
 	if err != nil {
 		return err
 	}
 
-	err = internal.WriteConfig(config)
+	err = config.WriteConfig(conf)
 	if err != nil {
 		return err
 	}
