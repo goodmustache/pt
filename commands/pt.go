@@ -5,6 +5,7 @@ type PTCommand struct {
 
 	AddUser    AddUserCommand    `command:"add-user" alias:"au" description:"Add user's API key and login"`
 	RemoveUser RemoveUserCommand `command:"remove-user" alias:"ru" description:"Remove user's API key"`
+	User       UserCommand       `command:"user" alias:"u" description:"Displays User"`
 }
 
 var PT PTCommand
