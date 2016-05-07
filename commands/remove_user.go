@@ -13,7 +13,7 @@ type RemoveUserCommand struct {
 	Force    bool   `long:"with-malice" description:"Remove target user without confirmation"`
 }
 
-func (cmd *RemoveUserCommand) Execute([]string) error {
+func (cmd RemoveUserCommand) Execute([]string) error {
 	selectedUser, err := actions.GetUser(cmd.Alias, cmd.Username)
 	if err != nil {
 		return err

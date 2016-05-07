@@ -11,7 +11,7 @@ type UserCommand struct {
 	Username string `short:"u" long:"username" description:"Target user's username"`
 }
 
-func (cmd *UserCommand) Execute([]string) error {
+func (cmd UserCommand) Execute([]string) error {
 	user, err := actions.GetUser(cmd.Alias, cmd.Username)
 	if err != nil {
 		return err

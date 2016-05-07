@@ -19,7 +19,7 @@ type AddUserCommand struct {
 	Alias    string         `short:"a" long:"alias" description:"Alias to assign user"`
 }
 
-func (cmd *AddUserCommand) Execute([]string) error {
+func (cmd AddUserCommand) Execute([]string) error {
 	apiToken := cmd.APIToken.Value
 
 	if cmd.APIToken.Value == "" {
