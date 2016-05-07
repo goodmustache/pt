@@ -2,10 +2,8 @@ package commands
 
 import (
 	"fmt"
-	"time"
 
-	"github.com/goodmustache/pt/commands/internal"
-	"github.com/goodmustache/pt/config"
+	"github.com/goodmustache/pt/actions"
 	"github.com/vito/go-interact/interact"
 )
 
@@ -16,7 +14,7 @@ type RemoveUserCommand struct {
 }
 
 func (cmd *RemoveUserCommand) Execute([]string) error {
-	selectedUser, err := internal.GetUser(cmd.Alias, cmd.Username)
+	selectedUser, err := actions.GetUser(cmd.Alias, cmd.Username)
 	if err != nil {
 		return err
 	}
@@ -30,23 +28,7 @@ func (cmd *RemoveUserCommand) Execute([]string) error {
 		}
 	}
 
-	conf, err := config.ReadConfig()
-
-	for i, user := range conf.Users {
-		if user.ID == selectedUser.ID {
-			conf.Users = append(conf.Users[:i], conf.Users[i+1:]...)
-		}
-	}
-
-	if conf.CurrentUserID == selectedUser.ID {
-		conf.CurrentUserID = 0
-		conf.CurrentUserSetTime = time.Time{}
-	}
-
-	err = config.WriteConfig(conf)
-	if err != nil {
-		return err
-	}
+	actions.RemoveUser(selectedUser)
 
 	fmt.Printf("User %s (%s) has been removed.\n", selectedUser.Name, selectedUser.Username)
 

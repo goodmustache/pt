@@ -3,7 +3,7 @@ package commands
 import (
 	"fmt"
 
-	"github.com/goodmustache/pt/commands/internal"
+	"github.com/goodmustache/pt/actions"
 )
 
 type UserCommand struct {
@@ -12,7 +12,7 @@ type UserCommand struct {
 }
 
 func (cmd *UserCommand) Execute([]string) error {
-	user, err := internal.GetUser(cmd.Alias, cmd.Username)
+	user, err := actions.GetUser(cmd.Alias, cmd.Username)
 	if err != nil {
 		return err
 	}

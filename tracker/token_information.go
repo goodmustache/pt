@@ -11,12 +11,12 @@ type TokenInfomation struct {
 }
 
 func (c client) TokenInfo() (TokenInfomation, error) {
-	var tokenInfo TokenInfomation
 	responseBody, err := c.get("/me")
 	if err != nil {
-		return tokenInfo, err
+		return TokenInfomation{}, err
 	}
 
+	var tokenInfo TokenInfomation
 	err = json.Unmarshal(responseBody, &tokenInfo)
 	return tokenInfo, err
 }

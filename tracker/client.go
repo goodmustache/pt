@@ -5,18 +5,14 @@ import (
 	"net/http"
 )
 
-type Client interface {
-	TokenInfo() (TokenInfomation, error)
-}
-
 type client struct {
 	APIURL     string
 	APIToken   APIToken
 	httpClient *http.Client
 }
 
-func NewClient(apiURL string, apiToken APIToken) Client {
-	return &client{
+func NewClient(apiURL string, apiToken APIToken) client {
+	return client{
 		APIURL:     apiURL,
 		APIToken:   apiToken,
 		httpClient: http.DefaultClient,

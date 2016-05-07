@@ -2,10 +2,9 @@ package commands
 
 import (
 	"fmt"
-	"os"
 
+	"github.com/goodmustache/pt/actions"
 	"github.com/goodmustache/pt/commands/internal/flags"
-	"github.com/goodmustache/pt/config"
 	"github.com/goodmustache/pt/tracker"
 	"github.com/vito/go-interact/interact"
 )
@@ -40,32 +39,12 @@ func (cmd *AddUserCommand) Execute([]string) error {
 	}
 
 	client := tracker.NewClient(PT.TrackerURL, apiToken)
-	tokenInfo, err := client.TokenInfo()
+	user, err := actions.AddUser(client, cmd.Alias)
 	if err != nil {
 		return err
 	}
 
-	conf, err := config.ReadConfig()
-	if err != nil && !os.IsNotExist(err) {
-		return err
-	}
-
-	err = conf.AddUser(tokenInfo.ID, tokenInfo.APIToken, tokenInfo.Name, tokenInfo.Username, cmd.Alias)
-	if err != nil {
-		return err
-	}
-
-	err = conf.SetCurrentUser(tokenInfo.Username)
-	if err != nil {
-		return err
-	}
-
-	err = config.WriteConfig(conf)
-	if err != nil {
-		return err
-	}
-
-	fmt.Printf("Added User! Setting %s (%s) to be the current user.\n", tokenInfo.Name, tokenInfo.Username)
+	fmt.Printf("Added User! Setting %s (%s) to be the current user.\n", user.Name, user.Username)
 
 	return nil
 }

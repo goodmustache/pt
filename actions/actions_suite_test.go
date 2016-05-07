@@ -1,4 +1,4 @@
-package internal_test
+package actions_test
 
 import (
 	"io/ioutil"
@@ -13,7 +13,7 @@ import (
 
 func TestInternal(t *testing.T) {
 	RegisterFailHandler(Fail)
-	RunSpecs(t, "Internal Suite")
+	RunSpecs(t, "Actions Suite")
 }
 
 var homeDir string
