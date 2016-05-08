@@ -28,9 +28,9 @@ var _ = Describe("Add User", func() {
 			session := runCommand("add-user", "-h")
 
 			Eventually(session).ShouldNot(Exit(0))
-			Expect(session.Out).To(Say("add-user"))
-			Expect(session.Out).To(Say("api-token"))
-			Expect(session.Out).To(Say("alias"))
+			Expect(session.Err).To(Say("add-user"))
+			Expect(session.Err).To(Say("--api-token"))
+			Expect(session.Err).To(Say("--alias"))
 		})
 	})
 

@@ -28,7 +28,10 @@ func (cmd RemoveUserCommand) Execute([]string) error {
 		}
 	}
 
-	actions.RemoveUser(selectedUser)
+	err = actions.RemoveUser(selectedUser)
+	if err != nil {
+		return err
+	}
 
 	fmt.Printf("User %s (%s) has been removed.\n", selectedUser.Name, selectedUser.Username)
 

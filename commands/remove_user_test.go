@@ -19,17 +19,17 @@ var _ = Describe("Remove User", func() {
 			session := runCommand("remove-user", "-h")
 
 			Eventually(session).ShouldNot(Exit(0))
-			Expect(session.Out).To(Say("remove-user"))
-			Expect(session.Out).To(Say("alias"))
-			Expect(session.Out).To(Say("username"))
-			Expect(session.Out).To(Say("with-malice"))
+			Expect(session.Err).To(Say("remove-user"))
+			Expect(session.Err).To(Say("--alias"))
+			Expect(session.Err).To(Say("--username"))
+			Expect(session.Err).To(Say("--with-malice"))
 		})
 	})
 
 	var user1 = config.User{ID: 2, APIToken: "doesn't matter", Name: "Anand Gaitonde", Username: "agaitonde", Alias: "ag"}
 	var user2 = config.User{ID: 3, APIToken: "doesn't matter", Name: "Hank Venture", Username: "hventure", Alias: "hv"}
 
-	DescribeTable("successfully removes a user",
+	DescribeTable("input prompts and output",
 		func(removeUserCmd func() (*Session, config.User)) {
 			conf := config.Config{
 				CurrentUserID:      user1.ID,
@@ -90,6 +90,27 @@ var _ = Describe("Remove User", func() {
 			return session, user2
 		}),
 	)
+
+	It("removes user from config", func() {
+		conf := config.Config{
+			CurrentUserID:      user1.ID,
+			CurrentUserSetTime: time.Now(),
+			Users:              []config.User{user1, user2},
+		}
+
+		err := actions.WriteConfig(conf)
+		Expect(err).ToNot(HaveOccurred())
+
+		session := runCommand("remove-user", "-u", user2.Username, "--with-malice")
+
+		Eventually(session.Out).Should(Say("User %s \\(%s\\) has been removed.", user2.Name, user2.Username))
+		Eventually(session).Should(Exit(0))
+
+		readConfig, err := actions.ReadConfig()
+		Expect(err).ToNot(HaveOccurred())
+		Expect(readConfig.Users).To(HaveLen(1))
+		Expect(readConfig.Users[0].ID).To(Equal(user1.ID))
+	})
 
 	It("does not remove user when no is inputted", func() {
 		conf := config.Config{

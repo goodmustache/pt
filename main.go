@@ -13,7 +13,7 @@ func main() {
 
 	_, err := parser.Parse()
 	if err != nil {
-		fmt.Println(err)
+		fmt.Fprintf(os.Stderr, err.Error())
 		os.Exit(1)
 	}
 }

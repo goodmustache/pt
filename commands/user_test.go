@@ -16,9 +16,9 @@ var _ = Describe("User", func() {
 			session := runCommand("user", "-h")
 
 			Eventually(session).ShouldNot(Exit(0))
-			Expect(session.Out).To(Say("user"))
-			Expect(session.Out).To(Say("--alias"))
-			Expect(session.Out).To(Say("--username"))
+			Expect(session.Err).To(Say("user"))
+			Expect(session.Err).To(Say("--alias"))
+			Expect(session.Err).To(Say("--username"))
 		})
 	})
 
