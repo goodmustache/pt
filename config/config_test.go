@@ -140,6 +140,61 @@ var _ = Describe("Config", func() {
 		)
 	})
 
+	Describe("RemoveUser", func() {
+		var user1 = User{ID: 2, APIToken: "doesn't matter", Name: "Anand Gaitonde", Username: "agaitonde", Alias: "ag"}
+		var user2 = User{ID: 3, APIToken: "doesn't matter", Name: "Hank Venture", Username: "hventure", Alias: "hv"}
+
+		Context("when the user exists", func() {
+			DescribeTable("successfully removes a user",
+				func(userToRemove User, current Config, expected Config) {
+					err := current.RemoveUser(userToRemove)
+					Expect(err).ToNot(HaveOccurred())
+
+					Expect(current).To(Equal(expected))
+				},
+
+				Entry("removes passed user",
+					user2,
+					Config{
+						CurrentUserID:      user1.ID,
+						CurrentUserSetTime: time.Date(2014, 4, 14, 17, 6, 0, 0, time.UTC),
+						Users:              []User{user1, user2},
+					},
+					Config{
+						CurrentUserID:      user1.ID,
+						CurrentUserSetTime: time.Date(2014, 4, 14, 17, 6, 0, 0, time.UTC),
+						Users:              []User{user1},
+					}),
+
+				Entry("removes passed user and unsets current user id/set time",
+					user1,
+					Config{
+						CurrentUserID:      user1.ID,
+						CurrentUserSetTime: time.Now(),
+						Users:              []User{user1, user2},
+					},
+					Config{
+						CurrentUserID:      0,
+						CurrentUserSetTime: time.Time{},
+						Users:              []User{user2},
+					}),
+			)
+		})
+
+		Context("when the user does not exist", func() {
+			It("returns ErrorUserDoesNotExist", func() {
+				config := Config{
+					CurrentUserID:      0,
+					CurrentUserSetTime: time.Time{},
+					Users:              []User{user2},
+				}
+
+				err := config.RemoveUser(user1)
+				Expect(err).To(Equal(ErrUserNotFound))
+			})
+		})
+	})
+
 	Describe("SetCurrentUser", func() {
 		Context("when user exists", func() {
 			It("sets the current user with the current set time", func() {
@@ -155,7 +210,7 @@ var _ = Describe("Config", func() {
 		Context("when user does not exist", func() {
 			It("errors", func() {
 				err := parsedConfig.SetCurrentUser("banana")
-				Expect(err).To(Equal(ErrorUserDoesNotExist))
+				Expect(err).To(Equal(ErrUserNotFound))
 			})
 		})
 

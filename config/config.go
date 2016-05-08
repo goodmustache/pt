@@ -50,6 +50,26 @@ func (config *Config) AddUser(id uint64, apiToken string, name string, username 
 	return nil
 }
 
+func (config *Config) RemoveUser(userToRemove User) error {
+	var found bool
+	for i, user := range config.Users {
+		if user.ID == userToRemove.ID {
+			config.Users = append(config.Users[:i], config.Users[i+1:]...)
+			found = true
+			break
+		}
+	}
+
+	if !found {
+		return ErrUserNotFound
+	}
+
+	if config.CurrentUserID == userToRemove.ID {
+		return config.SetCurrentUser("")
+	}
+	return nil
+}
+
 func (config *Config) SetCurrentUser(username string) error {
 	if username == "" {
 		config.CurrentUserID = 0
@@ -65,7 +85,7 @@ func (config *Config) SetCurrentUser(username string) error {
 		}
 	}
 
-	return ErrorUserDoesNotExist
+	return ErrUserNotFound
 }
 
 func LoadConfig(rawConfig []byte) (Config, error) {

@@ -3,7 +3,6 @@ package actions
 import (
 	"errors"
 	"os"
-	"time"
 
 	"github.com/goodmustache/pt/config"
 )
@@ -104,16 +103,9 @@ func RemoveUser(userToRemove User) error {
 		return err
 	}
 
-	for i, user := range conf.Users {
-		if user.ID == userToRemove.ID {
-			conf.Users = append(conf.Users[:i], conf.Users[i+1:]...)
-			break
-		}
-	}
-
-	if conf.CurrentUserID == userToRemove.ID {
-		conf.CurrentUserID = 0
-		conf.CurrentUserSetTime = time.Time{}
+	err = conf.RemoveUser(config.User(userToRemove))
+	if err != nil {
+		return err
 	}
 
 	return config.WriteConfig(conf)

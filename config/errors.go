@@ -5,7 +5,7 @@ import (
 	"fmt"
 )
 
-var ErrorUserDoesNotExist = errors.New("Specified user does not exist in config.")
+var ErrUserNotFound = errors.New("Specified user does not exist in config.")
 
 type DuplicateAliasError struct {
 	User User
