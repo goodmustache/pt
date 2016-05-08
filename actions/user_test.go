@@ -1,6 +1,8 @@
 package actions_test
 
 import (
+	"time"
+
 	. "github.com/goodmustache/pt/actions"
 	"github.com/goodmustache/pt/config"
 
@@ -61,6 +63,40 @@ var _ = Describe("User", func() {
 				_, err := GetUser("ag", "")
 				Expect(err).To(Equal(ErrNoCurrentUserSet))
 			})
+		})
+	})
+
+	Describe("RemoveUser", func() {
+		var userToRemove User
+		var userToKeep config.User
+
+		BeforeEach(func() {
+			userToKeep = config.User{ID: 2, Username: "agaitonde", Alias: "ag"}
+			userToRemove = User{ID: 3, Username: "hventure", Alias: "hv"}
+			conf := config.Config{
+				CurrentUserID:      userToKeep.ID,
+				CurrentUserSetTime: time.Date(2014, 4, 14, 17, 6, 0, 0, time.UTC),
+				Users: []config.User{
+					userToKeep,
+					config.User(userToRemove),
+				},
+			}
+
+			err := WriteConfig(conf)
+			Expect(err).ToNot(HaveOccurred())
+		})
+
+		It("removes user from config", func() {
+			err := RemoveUser(userToRemove)
+			Expect(err).ToNot(HaveOccurred())
+
+			readConf, err := ReadConfig()
+			Expect(err).ToNot(HaveOccurred())
+			Expect(readConf).To(Equal(config.Config{
+				CurrentUserID:      userToKeep.ID,
+				CurrentUserSetTime: time.Date(2014, 4, 14, 17, 6, 0, 0, time.UTC),
+				Users:              []config.User{userToKeep},
+			}))
 		})
 	})
 })

@@ -30,24 +30,19 @@ var _ = Describe("Remove User", func() {
 	var user2 = config.User{ID: 3, APIToken: "doesn't matter", Name: "Hank Venture", Username: "hventure", Alias: "hv"}
 
 	DescribeTable("successfully removes a user",
-		func(removeUserCmd func() (*Session, config.User), current config.Config, expected config.Config) {
-			err := actions.WriteConfig(current)
+		func(removeUserCmd func() (*Session, config.User)) {
+			conf := config.Config{
+				CurrentUserID:      user1.ID,
+				CurrentUserSetTime: time.Now(),
+				Users:              []config.User{user1, user2},
+			}
+			err := actions.WriteConfig(conf)
 			Expect(err).ToNot(HaveOccurred())
 
 			session, removedUser := removeUserCmd()
 
 			Eventually(session.Out).Should(Say("User %s \\(%s\\) has been removed.", removedUser.Name, removedUser.Username))
 			Eventually(session).Should(Exit(0))
-
-			readConfig, err := actions.ReadConfig()
-			Expect(err).ToNot(HaveOccurred())
-
-			readConfigTime := readConfig.CurrentUserSetTime
-			expectedConfigTime := expected.CurrentUserSetTime
-			readConfig.CurrentUserSetTime, expected.CurrentUserSetTime = time.Time{}, time.Time{}
-
-			Expect(readConfig).To(Equal(expected))
-			Expect(readConfigTime).To(BeTemporally("~", expectedConfigTime, time.Second))
 		},
 
 		Entry("prompts for removal of current user", func() (*Session, config.User) {
@@ -57,14 +52,6 @@ var _ = Describe("Remove User", func() {
 			Eventually(session.Out).Should(Say("Remove %s \\(%s\\):", user1.Name, user1.Username))
 			inputValue("yes", stdin)
 			return session, user1
-		}, config.Config{
-			CurrentUserID:      user1.ID,
-			CurrentUserSetTime: time.Now(),
-			Users:              []config.User{user1, user2},
-		}, config.Config{
-			CurrentUserID:      0,
-			CurrentUserSetTime: time.Time{},
-			Users:              []config.User{user2},
 		}),
 
 		Entry("prompts for removal of current user provided by alias", func() (*Session, config.User) {
@@ -74,14 +61,6 @@ var _ = Describe("Remove User", func() {
 			Eventually(session.Out).Should(Say("Remove %s \\(%s\\):", user1.Name, user1.Username))
 			inputValue("yes", stdin)
 			return session, user1
-		}, config.Config{
-			CurrentUserID:      user1.ID,
-			CurrentUserSetTime: time.Now(),
-			Users:              []config.User{user1, user2},
-		}, config.Config{
-			CurrentUserID:      0,
-			CurrentUserSetTime: time.Time{},
-			Users:              []config.User{user2},
 		}),
 
 		Entry("prompts for removal of current user provided by username", func() (*Session, config.User) {
@@ -91,14 +70,6 @@ var _ = Describe("Remove User", func() {
 			Eventually(session.Out).Should(Say("Remove %s \\(%s\\):", user1.Name, user1.Username))
 			inputValue("yes", stdin)
 			return session, user1
-		}, config.Config{
-			CurrentUserID:      user1.ID,
-			CurrentUserSetTime: time.Now(),
-			Users:              []config.User{user1, user2},
-		}, config.Config{
-			CurrentUserID:      0,
-			CurrentUserSetTime: time.Time{},
-			Users:              []config.User{user2},
 		}),
 
 		Entry("prompts for removal of different user provided by username", func() (*Session, config.User) {
@@ -108,14 +79,6 @@ var _ = Describe("Remove User", func() {
 			Eventually(session.Out).Should(Say("Remove %s \\(%s\\):", user2.Name, user2.Username))
 			inputValue("yes", stdin)
 			return session, user2
-		}, config.Config{
-			CurrentUserID:      user1.ID,
-			CurrentUserSetTime: time.Now(),
-			Users:              []config.User{user1, user2},
-		}, config.Config{
-			CurrentUserID:      user1.ID,
-			CurrentUserSetTime: time.Now(),
-			Users:              []config.User{user1},
 		}),
 
 		Entry("doesn't prompts for removal of different user provided by username if with-malice flag is provided", func() (*Session, config.User) {
@@ -125,14 +88,6 @@ var _ = Describe("Remove User", func() {
 			Eventually(session.Out).ShouldNot(Say("Remove %s \\(%s\\):", user2.Name, user2.Username))
 			inputValue("yes", stdin)
 			return session, user2
-		}, config.Config{
-			CurrentUserID:      user1.ID,
-			CurrentUserSetTime: time.Now(),
-			Users:              []config.User{user1, user2},
-		}, config.Config{
-			CurrentUserID:      user1.ID,
-			CurrentUserSetTime: time.Now(),
-			Users:              []config.User{user1},
 		}),
 	)
 
