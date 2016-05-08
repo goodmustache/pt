@@ -7,6 +7,7 @@ import (
 	"path"
 	"time"
 
+	"github.com/goodmustache/pt/actions"
 	. "github.com/goodmustache/pt/commands"
 	"github.com/goodmustache/pt/config"
 	"github.com/goodmustache/pt/tracker"
@@ -147,7 +148,7 @@ var _ = Describe("Add User", func() {
 				},
 			}
 
-			err := config.WriteConfig(conf)
+			err := actions.WriteConfig(conf)
 			Expect(err).ToNot(HaveOccurred())
 
 			server.AppendHandlers(
@@ -163,7 +164,7 @@ var _ = Describe("Add User", func() {
 
 			Eventually(session).Should(Exit(0))
 
-			readConf, err := config.ReadConfig()
+			readConf, err := actions.ReadConfig()
 			Expect(err).ToNot(HaveOccurred())
 
 			users := readConf.Users

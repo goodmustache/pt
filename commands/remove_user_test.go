@@ -3,6 +3,7 @@ package commands_test
 import (
 	"time"
 
+	"github.com/goodmustache/pt/actions"
 	"github.com/goodmustache/pt/config"
 
 	. "github.com/onsi/ginkgo"
@@ -30,7 +31,7 @@ var _ = Describe("Remove User", func() {
 
 	DescribeTable("successfully removes a user",
 		func(removeUserCmd func() (*Session, config.User), current config.Config, expected config.Config) {
-			err := config.WriteConfig(current)
+			err := actions.WriteConfig(current)
 			Expect(err).ToNot(HaveOccurred())
 
 			session, removedUser := removeUserCmd()
@@ -38,7 +39,7 @@ var _ = Describe("Remove User", func() {
 			Eventually(session.Out).Should(Say("User %s \\(%s\\) has been removed.", removedUser.Name, removedUser.Username))
 			Eventually(session).Should(Exit(0))
 
-			readConfig, err := config.ReadConfig()
+			readConfig, err := actions.ReadConfig()
 			Expect(err).ToNot(HaveOccurred())
 
 			readConfigTime := readConfig.CurrentUserSetTime
@@ -142,7 +143,7 @@ var _ = Describe("Remove User", func() {
 			Users:              []config.User{user1, user2},
 		}
 
-		err := config.WriteConfig(conf)
+		err := actions.WriteConfig(conf)
 		Expect(err).ToNot(HaveOccurred())
 
 		session, stdin := runCommandWithInput("remove-user", "-u", user2.Username)

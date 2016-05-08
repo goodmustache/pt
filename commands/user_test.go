@@ -1,6 +1,7 @@
 package commands_test
 
 import (
+	"github.com/goodmustache/pt/actions"
 	"github.com/goodmustache/pt/config"
 
 	. "github.com/onsi/ginkgo"
@@ -43,7 +44,7 @@ var _ = Describe("User", func() {
 				},
 			}
 
-			err := config.WriteConfig(conf)
+			err := actions.WriteConfig(conf)
 			Expect(err).ToNot(HaveOccurred())
 		})
 

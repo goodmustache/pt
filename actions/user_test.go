@@ -24,7 +24,7 @@ var _ = Describe("User", func() {
 							},
 						}
 
-						err := config.WriteConfig(conf)
+						err := WriteConfig(conf)
 						Expect(err).ToNot(HaveOccurred())
 
 						user, err := GetUser(alias, username)
@@ -41,7 +41,7 @@ var _ = Describe("User", func() {
 			Context("user exists", func() {
 				DescribeTable("returns error",
 					func(alias string, username string, expectedError error) {
-						err := config.WriteConfig(config.Config{})
+						err := WriteConfig(config.Config{})
 						Expect(err).ToNot(HaveOccurred())
 
 						_, err = GetUser(alias, username)

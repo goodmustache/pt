@@ -26,7 +26,7 @@ func AddUser(client TrackerClient, alias string) (User, error) {
 		return User{}, err
 	}
 
-	conf, err := config.ReadConfig()
+	conf, err := ReadConfig()
 	if err != nil && !os.IsNotExist(err) {
 		return User{}, err
 	}
@@ -49,7 +49,7 @@ func AddUser(client TrackerClient, alias string) (User, error) {
 		return User{}, err
 	}
 
-	err = config.WriteConfig(conf)
+	err = WriteConfig(conf)
 	if err != nil {
 		return User{}, err
 	}
@@ -58,7 +58,7 @@ func AddUser(client TrackerClient, alias string) (User, error) {
 }
 
 func GetUser(alias string, username string) (User, error) {
-	conf, err := config.ReadConfig()
+	conf, err := ReadConfig()
 	if err != nil {
 		if exists := os.IsNotExist(err); exists {
 			return User{}, ErrNoCurrentUserSet
@@ -98,7 +98,7 @@ func GetUser(alias string, username string) (User, error) {
 }
 
 func RemoveUser(userToRemove User) error {
-	conf, err := config.ReadConfig()
+	conf, err := ReadConfig()
 	if err != nil {
 		return err
 	}
@@ -108,5 +108,5 @@ func RemoveUser(userToRemove User) error {
 		return err
 	}
 
-	return config.WriteConfig(conf)
+	return WriteConfig(conf)
 }

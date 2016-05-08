@@ -1,23 +1,25 @@
-package config
+package actions
 
 import (
 	"io/ioutil"
 	"os"
 	"path"
 	"runtime"
+
+	"github.com/goodmustache/pt/config"
 )
 
-func ReadConfig() (Config, error) {
+func ReadConfig() (config.Config, error) {
 	rawConfig, err := ioutil.ReadFile(configFile())
 	if err != nil {
-		return Config{}, err
+		return config.Config{}, err
 	}
 
-	return LoadConfig(rawConfig)
+	return config.LoadConfig(rawConfig)
 }
 
-func WriteConfig(conf Config) error {
-	rawConfig, err := SaveConfig(conf)
+func WriteConfig(conf config.Config) error {
+	rawConfig, err := config.SaveConfig(conf)
 	if err != nil {
 		return err
 	}
