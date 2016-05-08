@@ -12,26 +12,20 @@ var ErrUnableToFindUsername = errors.New("Unable to find username in config.")
 var ErrNoCurrentUserSet = errors.New("There is no current user set in the config, either add a user (via 'add-user') or set the current user (via 'set-user').")
 var ErrBothAliasAndUsernameProvided = errors.New("Both alias and username were provided, only one is allowed.")
 
-type User struct {
-	ID       uint64 `json:"id"`
-	APIToken string `json:"api_token"`
-	Name     string `json:"name"`
-	Username string `json:"username"`
-	Alias    string `json:"alias,omitempty"`
-}
+type ConfigUser config.User
 
-func AddUser(client TrackerClient, alias string) (User, error) {
+func AddUser(client TrackerClient, alias string) (ConfigUser, error) {
 	tokenInfo, err := client.TokenInfo()
 	if err != nil {
-		return User{}, err
+		return ConfigUser{}, err
 	}
 
 	conf, err := ReadConfig()
 	if err != nil && !os.IsNotExist(err) {
-		return User{}, err
+		return ConfigUser{}, err
 	}
 
-	user := User{
+	user := ConfigUser{
 		ID:       tokenInfo.ID,
 		APIToken: tokenInfo.APIToken,
 		Name:     tokenInfo.Name,
@@ -41,63 +35,63 @@ func AddUser(client TrackerClient, alias string) (User, error) {
 
 	err = conf.AddUser(user.ID, user.APIToken, user.Name, user.Username, user.Alias)
 	if err != nil {
-		return User{}, err
+		return ConfigUser{}, err
 	}
 
 	err = conf.SetCurrentUser(user.Username)
 	if err != nil {
-		return User{}, err
+		return ConfigUser{}, err
 	}
 
 	err = WriteConfig(conf)
 	if err != nil {
-		return User{}, err
+		return ConfigUser{}, err
 	}
 
 	return user, nil
 }
 
-func GetUser(alias string, username string) (User, error) {
+func GetUser(alias string, username string) (ConfigUser, error) {
 	conf, err := ReadConfig()
 	if err != nil {
 		if exists := os.IsNotExist(err); exists {
-			return User{}, ErrNoCurrentUserSet
+			return ConfigUser{}, ErrNoCurrentUserSet
 		}
-		return User{}, err
+		return ConfigUser{}, err
 	}
 
 	if alias != "" && username != "" {
-		return User{}, ErrBothAliasAndUsernameProvided
+		return ConfigUser{}, ErrBothAliasAndUsernameProvided
 	}
 
 	switch {
 	case alias != "":
 		for _, user := range conf.Users {
 			if user.Alias == alias {
-				return User(user), nil
+				return ConfigUser(user), nil
 			}
 		}
-		return User{}, ErrUnableToFindAlias
+		return ConfigUser{}, ErrUnableToFindAlias
 
 	case username != "":
 		for _, user := range conf.Users {
 			if user.Username == username {
-				return User(user), nil
+				return ConfigUser(user), nil
 			}
 		}
-		return User{}, ErrUnableToFindUsername
+		return ConfigUser{}, ErrUnableToFindUsername
 
 	default:
 		for _, user := range conf.Users {
 			if user.ID == conf.CurrentUserID {
-				return User(user), nil
+				return ConfigUser(user), nil
 			}
 		}
-		return User{}, ErrNoCurrentUserSet
+		return ConfigUser{}, ErrNoCurrentUserSet
 	}
 }
 
-func RemoveUser(userToRemove User) error {
+func RemoveUser(userToRemove ConfigUser) error {
 	conf, err := ReadConfig()
 	if err != nil {
 		return err

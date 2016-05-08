@@ -67,12 +67,12 @@ var _ = Describe("User", func() {
 	})
 
 	Describe("RemoveUser", func() {
-		var userToRemove User
+		var userToRemove ConfigUser
 		var userToKeep config.User
 
 		BeforeEach(func() {
 			userToKeep = config.User{ID: 2, Username: "agaitonde", Alias: "ag"}
-			userToRemove = User{ID: 3, Username: "hventure", Alias: "hv"}
+			userToRemove = ConfigUser{ID: 3, Username: "hventure", Alias: "hv"}
 			conf := config.Config{
 				CurrentUserID:      userToKeep.ID,
 				CurrentUserSetTime: time.Date(2014, 4, 14, 17, 6, 0, 0, time.UTC),
