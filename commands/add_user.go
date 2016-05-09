@@ -38,7 +38,11 @@ func (cmd AddUserCommand) Execute([]string) error {
 		}
 	}
 
-	client := tracker.NewClient(PT.TrackerURL, apiToken)
+	client, err := tracker.NewClient(PT.TrackerURL, apiToken)
+	if err != nil {
+		return err
+	}
+
 	user, err := actions.AddUser(client, cmd.Alias)
 	if err != nil {
 		return err
