@@ -1,11 +1,7 @@
 package commands_test
 
 import (
-	"encoding/json"
-	"io/ioutil"
 	"net/http"
-	"path"
-	"time"
 
 	"github.com/goodmustache/pt/actions"
 	. "github.com/goodmustache/pt/commands"
@@ -34,98 +30,51 @@ var _ = Describe("Add User", func() {
 		})
 	})
 
-	Context("when config does not exists", func() {
-		DescribeTable("adding user",
-			func(inputApiToken func(alias string) *Session, alias string) {
-				tokenInfo := tracker.TokenInfomation{
-					APIToken: apiToken,
-					ID:       42,
-					Name:     "Anand Gaitonde",
-					Username: "agaitonde",
-				}
+	DescribeTable("input prompts and output",
+		func(inputApiToken func() *Session) {
+			tokenInfo := tracker.TokenInfomation{
+				APIToken: apiToken,
+				ID:       42,
+				Name:     "Anand Gaitonde",
+				Username: "agaitonde",
+			}
 
-				expectedConfig := config.Config{
-					CurrentUserID: tokenInfo.ID,
-					Users: []config.User{
-						{
-							APIToken: tokenInfo.APIToken,
-							ID:       tokenInfo.ID,
-							Name:     tokenInfo.Name,
-							Username: tokenInfo.Username,
-							Alias:    alias,
-						},
-					},
-				}
+			server.AppendHandlers(
+				CombineHandlers(
+					VerifyRequest("GET", "/me"),
+					VerifyHeader(http.Header{"X-TrackerToken": []string{apiToken}}),
+					RespondWithJSONEncoded(http.StatusOK, tokenInfo),
+				),
+			)
 
-				server.AppendHandlers(
-					CombineHandlers(
-						VerifyRequest("GET", "/me"),
-						VerifyHeader(http.Header{"X-TrackerToken": []string{apiToken}}),
-						RespondWithJSONEncoded(http.StatusOK, tokenInfo),
-					),
-				)
+			session := inputApiToken()
 
-				session := inputApiToken(alias)
+			Eventually(session.Out).Should(Say("Added User! Setting %s \\(%s\\) to be the current user.", tokenInfo.Name, tokenInfo.Username))
+			Eventually(session).Should(Exit(0))
+		},
 
-				Eventually(session.Out).Should(Say("Added User! Setting %s \\(%s\\) to be the current user.", tokenInfo.Name, tokenInfo.Username))
-				Eventually(session).Should(Exit(0))
+		Entry("prompts for api token when not passed", func() *Session {
+			session, stdin := runCommandWithInput("add-user")
+			defer stdin.Close()
 
-				rawConfig, err := ioutil.ReadFile(path.Join(userHomeDir(), ".config", "pt", "config.json"))
-				Expect(err).ToNot(HaveOccurred())
+			Eventually(session.Out).Should(Say(AddUserInstructions))
 
-				var config config.Config
-				err = json.Unmarshal(rawConfig, &config)
-				Expect(err).ToNot(HaveOccurred())
+			Eventually(session.Out).Should(Say("API Token:"))
+			inputValue(apiToken, stdin)
+			return session
+		}),
 
-				config.CurrentUserSetTime = time.Time{}
-				Expect(config).To(Equal(expectedConfig))
-			},
+		Entry("does not prompt when api token is passed", func() *Session {
+			session := runCommand("add-user", "--api-token", apiToken)
 
-			Entry("prompts for api token if not passed", func(_ string) *Session {
-				session, stdin := runCommandWithInput("add-user")
-				defer stdin.Close()
+			Eventually(session.Out).ShouldNot(Say(AddUserInstructions))
+			Eventually(session.Out).ShouldNot(Say("API Token:"))
+			return session
+		}),
+	)
 
-				Eventually(session.Out).Should(Say(AddUserInstructions))
-
-				Eventually(session.Out).Should(Say("API Token:"))
-				inputValue(apiToken, stdin)
-				return session
-			}, ""),
-
-			Entry("prompts for api token if not passed and adds alias", func(alias string) *Session {
-				session, stdin := runCommandWithInput("add-user", "-a", alias)
-				defer stdin.Close()
-
-				Eventually(session.Out).Should(Say(AddUserInstructions))
-
-				Eventually(session.Out).Should(Say("API Token:"))
-				inputValue(apiToken, stdin)
-				return session
-			}, "banana"),
-
-			Entry("does not prompt if api token is not passed", func(_ string) *Session {
-				session := runCommand("add-user", "--api-token", apiToken)
-
-				Eventually(session.Out).ShouldNot(Say(AddUserInstructions))
-				Eventually(session.Out).ShouldNot(Say("API Token:"))
-				return session
-			}, ""),
-
-			Entry("does not prompt if api token is not passed and adds alias", func(alias string) *Session {
-				session := runCommand("add-user", "--api-token", apiToken, "-a", alias)
-
-				Eventually(session.Out).ShouldNot(Say(AddUserInstructions))
-				Eventually(session.Out).ShouldNot(Say("API Token:"))
-				return session
-			}, "banana"),
-		)
-	})
-
-	Context("when the config exists", func() {
-		var (
-			tokenInfo tracker.TokenInfomation
-			conf      config.Config
-		)
+	Context("writing the config", func() {
+		var tokenInfo tracker.TokenInfomation
 
 		BeforeEach(func() {
 			tokenInfo = tracker.TokenInfomation{
@@ -134,22 +83,6 @@ var _ = Describe("Add User", func() {
 				Name:     "Anand Gaitonde",
 				Username: "agaitonde",
 			}
-
-			conf = config.Config{
-				CurrentUserID: 3,
-				Users: []config.User{
-					{
-						APIToken: "BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB",
-						ID:       3,
-						Name:     "Weyman Fung",
-						Username: "weymanf",
-						Alias:    "wf",
-					},
-				},
-			}
-
-			err := actions.WriteConfig(conf)
-			Expect(err).ToNot(HaveOccurred())
 
 			server.AppendHandlers(
 				CombineHandlers(
@@ -160,7 +93,8 @@ var _ = Describe("Add User", func() {
 		})
 
 		It("appends the new user to the config", func() {
-			session := runCommand("add-user", "--api-token", apiToken)
+			alias := "ag"
+			session := runCommand("add-user", "--api-token", apiToken, "-a", alias)
 
 			Eventually(session).Should(Exit(0))
 
@@ -168,9 +102,14 @@ var _ = Describe("Add User", func() {
 			Expect(err).ToNot(HaveOccurred())
 
 			users := readConf.Users
-			Expect(users).To(HaveLen(2))
-			Expect(users[0].ID).To(BeNumerically("==", 3))
-			Expect(users[1].ID).To(BeNumerically("==", 42))
+			Expect(users).To(HaveLen(1))
+			Expect(users[0]).To(Equal(config.User{
+				ID:       tokenInfo.ID,
+				APIToken: tokenInfo.APIToken,
+				Name:     tokenInfo.Name,
+				Username: tokenInfo.Username,
+				Alias:    alias,
+			}))
 		})
 	})
 })

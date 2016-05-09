@@ -4,7 +4,9 @@ import (
 	"time"
 
 	. "github.com/goodmustache/pt/actions"
+	"github.com/goodmustache/pt/actions/actionsfakes"
 	"github.com/goodmustache/pt/config"
+	"github.com/goodmustache/pt/tracker"
 
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/ginkgo/extensions/table"
@@ -12,6 +14,68 @@ import (
 )
 
 var _ = Describe("User", func() {
+	Describe("AddUser", func() {
+		DescribeTable("adds user to config",
+			func(setup func() config.Config) {
+				originalConfig := setup()
+
+				expectedUser := ConfigUser{
+					ID:       3,
+					APIToken: "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+					Name:     "Hank Venture",
+					Username: "hventuer",
+					Alias:    "hv",
+				}
+				expectedUserToken := tracker.TokenInfomation{
+					ID:       expectedUser.ID,
+					APIToken: expectedUser.APIToken,
+					Name:     expectedUser.Name,
+					Username: expectedUser.Username,
+				}
+
+				client := new(actionsfakes.FakeTrackerClient)
+				client.TokenInfoReturns(expectedUserToken, nil)
+
+				user, err := AddUser(client, expectedUser.Alias)
+				Expect(err).ToNot(HaveOccurred())
+				Expect(user).To(Equal(expectedUser))
+
+				expectedConfig := originalConfig
+				expectedConfig.CurrentUserID = expectedUserToken.ID
+				expectedConfig.Users = append(expectedConfig.Users, config.User(expectedUser))
+
+				readConfig, err := ReadConfig()
+				Expect(err).ToNot(HaveOccurred())
+
+				Expect(readConfig.CurrentUserSetTime).To(BeTemporally("~", time.Now(), time.Second))
+
+				readConfig.CurrentUserSetTime = time.Time{}
+				Expect(readConfig).To(Equal(expectedConfig))
+			},
+
+			Entry("that doesn't exist", func() config.Config {
+				return config.Config{}
+			}),
+
+			Entry("that already exists", func() config.Config {
+				currentUser := config.User{ID: 2, Username: "agaitonde", Alias: "ag"}
+				conf := config.Config{
+					CurrentUserID:      currentUser.ID,
+					CurrentUserSetTime: time.Date(2014, 4, 14, 17, 6, 0, 0, time.UTC),
+					Users: []config.User{
+						currentUser,
+					},
+				}
+
+				err := WriteConfig(conf)
+				Expect(err).ToNot(HaveOccurred())
+
+				conf.CurrentUserSetTime = time.Time{}
+				return conf
+			}),
+		)
+	})
+
 	Describe("GetUser", func() {
 		Context("when there are no issues reading the config", func() {
 			Context("user exists", func() {
