@@ -15,7 +15,7 @@ var ErrBothAliasAndUsernameProvided = errors.New("Both alias and username were p
 type ConfigUser config.User
 
 func AddUser(client TrackerClient, alias string) (ConfigUser, error) {
-	tokenInfo, err := client.TokenInfo()
+	tokenInfo, err := client.TokenInformation()
 	if err != nil {
 		return ConfigUser{}, err
 	}

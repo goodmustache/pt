@@ -2,7 +2,7 @@ package tracker
 
 import "encoding/json"
 
-type TokenInfomation struct {
+type TokenInformation struct {
 	ID       uint64 `json:"id"`
 	APIToken string `json:"api_token"`
 	Initials string `json:"initials"`
@@ -10,13 +10,13 @@ type TokenInfomation struct {
 	Username string `json:"username"`
 }
 
-func (c client) TokenInfo() (TokenInfomation, error) {
+func (c client) TokenInformation() (TokenInformation, error) {
 	responseBody, err := c.get("/me")
 	if err != nil {
-		return TokenInfomation{}, err
+		return TokenInformation{}, err
 	}
 
-	var tokenInfo TokenInfomation
+	var tokenInfo TokenInformation
 	err = json.Unmarshal(responseBody, &tokenInfo)
 	return tokenInfo, err
 }

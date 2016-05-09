@@ -9,36 +9,36 @@ import (
 )
 
 type FakeTrackerClient struct {
-	TokenInfoStub        func() (tracker.TokenInfomation, error)
-	tokenInfoMutex       sync.RWMutex
-	tokenInfoArgsForCall []struct{}
-	tokenInfoReturns     struct {
-		result1 tracker.TokenInfomation
+	TokenInformationStub        func() (tracker.TokenInformation, error)
+	tokenInformationMutex       sync.RWMutex
+	tokenInformationArgsForCall []struct{}
+	tokenInformationReturns     struct {
+		result1 tracker.TokenInformation
 		result2 error
 	}
 }
 
-func (fake *FakeTrackerClient) TokenInfo() (tracker.TokenInfomation, error) {
-	fake.tokenInfoMutex.Lock()
-	fake.tokenInfoArgsForCall = append(fake.tokenInfoArgsForCall, struct{}{})
-	fake.tokenInfoMutex.Unlock()
-	if fake.TokenInfoStub != nil {
-		return fake.TokenInfoStub()
+func (fake *FakeTrackerClient) TokenInformation() (tracker.TokenInformation, error) {
+	fake.tokenInformationMutex.Lock()
+	fake.tokenInformationArgsForCall = append(fake.tokenInformationArgsForCall, struct{}{})
+	fake.tokenInformationMutex.Unlock()
+	if fake.TokenInformationStub != nil {
+		return fake.TokenInformationStub()
 	} else {
-		return fake.tokenInfoReturns.result1, fake.tokenInfoReturns.result2
+		return fake.tokenInformationReturns.result1, fake.tokenInformationReturns.result2
 	}
 }
 
-func (fake *FakeTrackerClient) TokenInfoCallCount() int {
-	fake.tokenInfoMutex.RLock()
-	defer fake.tokenInfoMutex.RUnlock()
-	return len(fake.tokenInfoArgsForCall)
+func (fake *FakeTrackerClient) TokenInformationCallCount() int {
+	fake.tokenInformationMutex.RLock()
+	defer fake.tokenInformationMutex.RUnlock()
+	return len(fake.tokenInformationArgsForCall)
 }
 
-func (fake *FakeTrackerClient) TokenInfoReturns(result1 tracker.TokenInfomation, result2 error) {
-	fake.TokenInfoStub = nil
-	fake.tokenInfoReturns = struct {
-		result1 tracker.TokenInfomation
+func (fake *FakeTrackerClient) TokenInformationReturns(result1 tracker.TokenInformation, result2 error) {
+	fake.TokenInformationStub = nil
+	fake.tokenInformationReturns = struct {
+		result1 tracker.TokenInformation
 		result2 error
 	}{result1, result2}
 }

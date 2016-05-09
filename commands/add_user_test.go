@@ -32,7 +32,7 @@ var _ = Describe("Add User", func() {
 
 	DescribeTable("input prompts and output",
 		func(inputApiToken func() *Session) {
-			tokenInfo := tracker.TokenInfomation{
+			tokenInfo := tracker.TokenInformation{
 				APIToken: apiToken,
 				ID:       42,
 				Name:     "Anand Gaitonde",
@@ -74,10 +74,10 @@ var _ = Describe("Add User", func() {
 	)
 
 	Context("writing the config", func() {
-		var tokenInfo tracker.TokenInfomation
+		var tokenInfo tracker.TokenInformation
 
 		BeforeEach(func() {
-			tokenInfo = tracker.TokenInfomation{
+			tokenInfo = tracker.TokenInformation{
 				APIToken: apiToken,
 				ID:       42,
 				Name:     "Anand Gaitonde",

@@ -26,7 +26,7 @@ var _ = Describe("User", func() {
 					Username: "hventuer",
 					Alias:    "hv",
 				}
-				expectedUserToken := tracker.TokenInfomation{
+				expectedUserToken := tracker.TokenInformation{
 					ID:       expectedUser.ID,
 					APIToken: expectedUser.APIToken,
 					Name:     expectedUser.Name,
@@ -34,7 +34,7 @@ var _ = Describe("User", func() {
 				}
 
 				client := new(actionsfakes.FakeTrackerClient)
-				client.TokenInfoReturns(expectedUserToken, nil)
+				client.TokenInformationReturns(expectedUserToken, nil)
 
 				user, err := AddUser(client, expectedUser.Alias)
 				Expect(err).ToNot(HaveOccurred())
