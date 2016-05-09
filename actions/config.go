@@ -9,6 +9,7 @@ import (
 	"github.com/goodmustache/pt/config"
 )
 
+// ReadConfig reads the config in $HOME/.config/pt/config.json.
 func ReadConfig() (config.Config, error) {
 	rawConfig, err := ioutil.ReadFile(configFile())
 	if err != nil {
@@ -18,6 +19,8 @@ func ReadConfig() (config.Config, error) {
 	return config.LoadConfig(rawConfig)
 }
 
+// WriteConfig writes the config in $HOME/.config/pt/config.json, if no such
+// file/directory exists, it will create them.
 func WriteConfig(conf config.Config) error {
 	rawConfig, err := config.SaveConfig(conf)
 	if err != nil {

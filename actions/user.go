@@ -7,13 +7,26 @@ import (
 	"github.com/goodmustache/pt/config"
 )
 
+// ErrUnableToFindAlias is returned whenever a user cannot be found in the
+// config via it's alias.
 var ErrUnableToFindAlias = errors.New("Unable to find alias in config.")
+
+// ErrUnableToFindUsername is returned whenever a user cannot be found in the
+// config via it's username.
 var ErrUnableToFindUsername = errors.New("Unable to find username in config.")
+
+// ErrNoCurrentUserSet is returned when there is no current user set in the
+// config.
 var ErrNoCurrentUserSet = errors.New("There is no current user set in the config, either add a user (via 'add-user') or set the current user (via 'set-user').")
+
+// ErrBothAliasAndUsernameProvided is returned when the user passes both alias
+// and username to identify the user.
 var ErrBothAliasAndUsernameProvided = errors.New("Both alias and username were provided, only one is allowed.")
 
+// ConfigUser user returned back from the config
 type ConfigUser config.User
 
+// AddUser adds a user, via their API token, to the config
 func AddUser(client TrackerClient, alias string) (ConfigUser, error) {
 	tokenInfo, err := client.TokenInformation()
 	if err != nil {
@@ -51,6 +64,8 @@ func AddUser(client TrackerClient, alias string) (ConfigUser, error) {
 	return user, nil
 }
 
+// GetUser returns a ConfigUser that matches a given alias, username or the
+// current user. The current user is selected if no information is provided.
 func GetUser(alias string, username string) (ConfigUser, error) {
 	conf, err := ReadConfig()
 	if err != nil {
@@ -91,6 +106,7 @@ func GetUser(alias string, username string) (ConfigUser, error) {
 	}
 }
 
+// RemoveUser removes userToRemove from config
 func RemoveUser(userToRemove ConfigUser) error {
 	conf, err := ReadConfig()
 	if err != nil {
