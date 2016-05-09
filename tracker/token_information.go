@@ -10,7 +10,7 @@ type TokenInformation struct {
 }
 
 func (c Client) TokenInformation() (TokenInformation, error) {
-	responseBody, err := c.get("/me")
+	responseBody, err := c.get("me")
 	if err != nil {
 		return TokenInformation{}, err
 	}

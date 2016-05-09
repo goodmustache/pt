@@ -4,7 +4,6 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/url"
-	"path"
 )
 
 //go:generate counterfeiter . HTTPClient
@@ -33,7 +32,12 @@ func NewClient(apiURL string, apiToken APIToken) (Client, error) {
 }
 
 func (c Client) get(uri string) ([]byte, error) {
-	request, err := http.NewRequest("GET", path.Join(c.APIURL.Path, uri), nil)
+	URL, err := c.APIURL.Parse(uri)
+	if err != nil {
+		return nil, err
+	}
+
+	request, err := http.NewRequest("GET", URL.String(), nil)
 	if err != nil {
 		return nil, err
 	}
