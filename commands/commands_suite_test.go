@@ -7,6 +7,7 @@ import (
 	"os"
 	"os/exec"
 	"runtime"
+	"time"
 
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
@@ -51,6 +52,8 @@ var _ = BeforeEach(func() {
 	}
 
 	server = NewServer()
+
+	SetDefaultEventuallyTimeout(3 * time.Second)
 })
 
 var _ = AfterEach(func() {
