@@ -11,3 +11,4 @@ ratings:
 exclude_paths:
 - vendor/
 - "**_test.go"
+- "**fake**.go"
