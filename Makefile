@@ -4,7 +4,7 @@ all : pt
 
 test : pt
 	go fmt ./...
-	go vet . ./commands ./config
+	go vet . ./actions ./commands ./config ./tracker
 	ginkgo -r -randomizeSuites -randomizeAllSpecs -race
 
 clean :
