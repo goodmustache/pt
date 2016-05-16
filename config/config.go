@@ -39,8 +39,8 @@ type User struct {
 //	- API Token matches another user's API token (DuplicateAliasError)
 // 	- Username matches a saved alias (UsernameMatchesSavedAliasError)
 // 	- Alias matches another user's alias (AliasMatchesSavedUsernameError)
-// If a users user is added again (determined by the same ID), the original
-// user will be removed from the config.
+// If a user is added again (determined by the same ID), the original user will
+// be removed from the config.
 func (config *Config) AddUser(id uint64, apiToken string, name string, username string, alias string) error {
 	newUser := User{
 		ID:       id,
