@@ -128,7 +128,8 @@ var _ = Describe("Remove User", func() {
 		Eventually(session.Out).Should(Say("Remove %s \\(%s\\):", user2.Name, user2.Username))
 		inputValue("no", stdin)
 
-		Eventually(session.Out).ShouldNot(Say("User %s \\(%s\\) has been removed.", user2.Name, user2.Username))
+		Consistently(session.Out).ShouldNot(Say("User %s \\(%s\\) has been removed.", user2.Name, user2.Username))
+		Consistently(session.Err).ShouldNot(Say("User Terminated"))
 		Eventually(session).ShouldNot(Exit(0))
 	})
 })

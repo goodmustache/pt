@@ -1,5 +1,7 @@
 package commands
 
+import "errors"
+
 type PTCommand struct {
 	TrackerURL string `default:"https://www.pivotaltracker.com/services/v5/" long:"override-tracker-url" hidden:"true"`
 
@@ -8,5 +10,7 @@ type PTCommand struct {
 	User       UserCommand       `command:"user" alias:"u" description:"Displays pt user"`
 	Users      UsersCommand      `command:"users" description:"List all pt users"`
 }
+
+var ErrUserTerminated = errors.New("User Terminated")
 
 var PT PTCommand

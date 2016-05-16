@@ -21,10 +21,13 @@ func (cmd RemoveUserCommand) Execute([]string) error {
 
 	if !cmd.Force {
 		message := fmt.Sprintf("Remove %s (%s):", selectedUser.Name, selectedUser.Username)
-		var input bool
-		err := interact.NewInteraction(message).Resolve(interact.Required(&input))
+		var removeUser bool
+		err := interact.NewInteraction(message).Resolve(interact.Required(&removeUser))
 		if err != nil {
 			return err
+		}
+		if !removeUser {
+			return ErrUserTerminated
 		}
 	}
 
