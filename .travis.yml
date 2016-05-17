@@ -7,3 +7,6 @@ script: ginkgo -r -randomizeSuites -randomizeAllSpecs -race
 branches:
   only:
     - master
+addons:
+  code_climate:
+    repo_token: cde253b3c0caf533b147ca7a4273806d6eca182730398980cc6b400929b38400
