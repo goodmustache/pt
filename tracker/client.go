@@ -8,16 +8,28 @@ import (
 
 //go:generate counterfeiter . HTTPClient
 
+// HTTPClient is based off of http.Client.
 type HTTPClient interface {
 	Do(req *http.Request) (resp *http.Response, err error)
 }
 
+// Client is the Pivotal Tracker API Client. This client requires the base
+// Pivotal Tracker API URL and a user's API Token. The user's API token will be
+// used to make every request to the Pivotal Tracker API. This means that all
+// modifications to Pivotal Tracker will be seen as the given user.
 type Client struct {
-	APIURL     *url.URL
-	APIToken   APIToken
+	// APIURL is the base Pivotal Tracker API URL.
+	APIURL *url.URL
+
+	// APIToken is the user's API Token.
+	APIToken APIToken
+
+	// HTTPClient is a basic http client that can handle a Do request.
 	HTTPClient HTTPClient
 }
 
+// NewClient will return a new Client with HTTPClient set to
+// http.DefaultClient.
 func NewClient(apiURL string, apiToken APIToken) (Client, error) {
 	url, err := url.Parse(apiURL)
 	if err != nil {
