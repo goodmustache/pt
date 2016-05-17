@@ -7,10 +7,13 @@ test : pt
 	go vet . ./actions ./commands ./config ./tracker
 	ginkgo -r -randomizeSuites -randomizeAllSpecs -race
 
+install:
+	go install .
+
 clean :
 	rm pt
 
 pt : $(GO_FILES)
 	go build -o pt main.go
 
-.PHONY : all test clean
+.PHONY : all test install clean
