@@ -9,16 +9,19 @@ import (
 	"github.com/vito/go-interact/interact"
 )
 
+// AddUserInstructions is the instructions on how to add a user to pt
 const AddUserInstructions = `In order to add a user, you must provide an API Token. This can be found at the bottom of your Profile page, under the "API TOKEN" section. If none is listed, click the "CREATE NEW TOKEN" button. To find the Profile page, follow the follwing link:
 
 	https://www.pivotaltracker.com/profile
 `
 
+// AddUserCommand adds user to pt
 type AddUserCommand struct {
 	APIToken flags.APIToken `long:"api-token" description:"API Token for a user"`
 	Alias    string         `short:"a" long:"alias" description:"Alias to assign user"`
 }
 
+// Execute is the execution of the AddUserCommand
 func (cmd AddUserCommand) Execute([]string) error {
 	apiToken := cmd.APIToken.Value
 

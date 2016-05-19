@@ -9,10 +9,13 @@ import (
 	"github.com/goodmustache/pt/actions"
 )
 
+// ErrNoUsers is returned when no users have been added to pt
 var ErrNoUsers = errors.New("No users have been added, run the 'add-users' command.")
 
+// UsersCommand lists the users in pt
 type UsersCommand struct{}
 
+// Execute is the execution of the UsersCommand
 func (cmd UsersCommand) Execute([]string) error {
 	config, err := actions.ReadConfig()
 	if err != nil {

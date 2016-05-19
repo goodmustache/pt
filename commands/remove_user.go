@@ -7,12 +7,14 @@ import (
 	"github.com/vito/go-interact/interact"
 )
 
+// RemoveUserCommand removes user from pt
 type RemoveUserCommand struct {
 	Alias    string `short:"a" long:"alias" description:"Target user's alias"`
 	Username string `short:"u" long:"username" description:"Target user's username"`
 	Force    bool   `long:"with-malice" description:"Remove target user without confirmation"`
 }
 
+// Execute is the execution of the RemoveUserCommand
 func (cmd RemoveUserCommand) Execute([]string) error {
 	selectedUser, err := actions.GetUser(cmd.Alias, cmd.Username)
 	if err != nil {
