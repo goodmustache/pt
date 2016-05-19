@@ -14,6 +14,6 @@ clean :
 	rm pt
 
 pt : $(GO_FILES)
-	go build -o pt main.go
+	go build .
 
 .PHONY : all test install clean
