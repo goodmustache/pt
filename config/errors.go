@@ -5,6 +5,7 @@ import (
 	"fmt"
 )
 
+// ErrUserNotFound is returned when a given user is not found
 var ErrUserNotFound = errors.New("Specified user does not exist in config.")
 
 // DuplicateAliasError is the error that should be returned when adding a user
