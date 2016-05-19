@@ -1,8 +1,8 @@
 # pt
 A command line utility for [Pivotal Tracker](https://www.pivotaltracker.com/).
 
-## Project Status
-[![Build Status](https://travis-ci.org/goodmustache/pt.svg?branch=master)](https://travis-ci.org/goodmustache/pt) [![Go Report Card](https://goreportcard.com/badge/github.com/goodmustache/pt)](https://goreportcard.com/report/github.com/goodmustache/pt) [![Code Climate](https://codeclimate.com/github/goodmustache/pt/badges/gpa.svg)](https://codeclimate.com/github/goodmustache/pt) [![Issue Count](https://codeclimate.com/github/goodmustache/pt/badges/issue_count.svg)](https://codeclimate.com/github/goodmustache/pt)
+## Badges / Project Status
+[![Slack Status](http://ptslack.cfapps.io/badge.svg)](http://ptslack.cfapps.io) [![Build Status](https://travis-ci.org/goodmustache/pt.svg?branch=master)](https://travis-ci.org/goodmustache/pt) [![Go Report Card](https://goreportcard.com/badge/github.com/goodmustache/pt)](https://goreportcard.com/report/github.com/goodmustache/pt) [![Code Climate](https://codeclimate.com/github/goodmustache/pt/badges/gpa.svg)](https://codeclimate.com/github/goodmustache/pt) [![Issue Count](https://codeclimate.com/github/goodmustache/pt/badges/issue_count.svg)](https://codeclimate.com/github/goodmustache/pt)
 
 ## Installation
 
