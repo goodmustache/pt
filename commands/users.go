@@ -47,7 +47,5 @@ func (cmd UsersCommand) Execute([]string) error {
 		fmt.Fprintf(w, "%s\t%s\t%s\n", user.Name, user.Username, user.Alias)
 	}
 
-	w.Flush()
-
-	return nil
+	return w.Flush()
 }
