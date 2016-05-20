@@ -10,5 +10,8 @@ A command line utility for [Pivotal Tracker](https://www.pivotaltracker.com/).
 go get -u github.com/goodmustache/pt
 ```
 
+## Wait, where's your tracker?
+Why it's right [here](https://www.pivotaltracker.com/n/projects/1593533)!
+
 ## Association with Pivotal Tracker
 This project was created and worked on by people who do not work on [Pivotal Tracker](https://www.pivotaltracker.com/) and do not own the rights to its name or logo. If you would like to use said name or logo, please contact them through their official website.
