@@ -7,9 +7,9 @@ import "errors"
 type PTCommand struct {
 	TrackerURL string `default:"https://www.pivotaltracker.com/services/v5/" long:"override-tracker-url" hidden:"true"`
 
-	AddUser    AddUserCommand    `command:"add-user" alias:"au" description:"Add user's API token and login"`
-	RemoveUser RemoveUserCommand `command:"remove-user" alias:"ru" description:"Remove user's API token"`
-	User       UserCommand       `command:"user" alias:"u" description:"Displays pt user"`
+	AddUser    AddUserCommand    `command:"add-user" description:"Add user's API token and login"`
+	RemoveUser RemoveUserCommand `command:"remove-user" description:"Remove user's API token"`
+	User       UserCommand       `command:"user" description:"Displays pt user"`
 	Users      UsersCommand      `command:"users" description:"List all pt users"`
 }
 
