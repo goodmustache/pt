@@ -4,12 +4,12 @@ import (
 	"fmt"
 
 	"github.com/goodmustache/pt/actions"
+	"github.com/goodmustache/pt/commands/internal/flags"
 )
 
 // UserCommand list information about a user or the current user
 type UserCommand struct {
-	Alias    string `short:"a" long:"alias" description:"Target user's alias"`
-	Username string `short:"u" long:"username" description:"Target user's username"`
+	flags.CommonFlags
 }
 
 // Execute is the execution of the UserCommand

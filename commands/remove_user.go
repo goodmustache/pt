@@ -4,14 +4,14 @@ import (
 	"fmt"
 
 	"github.com/goodmustache/pt/actions"
+	"github.com/goodmustache/pt/commands/internal/flags"
 	"github.com/vito/go-interact/interact"
 )
 
 // RemoveUserCommand removes user from pt
 type RemoveUserCommand struct {
-	Alias    string `short:"a" long:"alias" description:"Target user's alias"`
-	Username string `short:"u" long:"username" description:"Target user's username"`
-	Force    bool   `long:"with-malice" description:"Remove target user without confirmation"`
+	flags.CommonFlags
+	Force bool `long:"with-malice" description:"Remove target user without confirmation"`
 }
 
 // Execute is the execution of the RemoveUserCommand
