@@ -20,7 +20,8 @@ type TokenInformation struct {
 }
 
 // TokenInformation GETs the '/me' endpoint and returns a subset of the
-// information provided.
+// information provided. For more information, see the Pivotal Tracker API
+// Docs: https://www.pivotaltracker.com/help/api/rest/v5#Me
 func (c Client) TokenInformation() (TokenInformation, error) {
 	responseBody, err := c.get("me")
 	if err != nil {
