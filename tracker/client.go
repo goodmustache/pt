@@ -1,3 +1,9 @@
+// The tracker package is designed to work with the Pivotal Tracker V5 API:
+// https://www.pivotaltracker.com/help/api/rest/v5
+//
+// It will provide a client and support objects that can be used to interact
+// with Pivotal Tracker. This package does *not* handle any form of
+// authentication, so the burden of security is put on the library user.
 package tracker
 
 import (

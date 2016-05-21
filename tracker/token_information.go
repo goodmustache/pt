@@ -3,7 +3,8 @@ package tracker
 import "encoding/json"
 
 // TokenInformation matches a subset of the user information returned from the
-// '/me' endpoint.
+// '/me' endpoint. For more information, see the Pivotal Tracker API Docs:
+// https://www.pivotaltracker.com/help/api/rest/v5#Me
 type TokenInformation struct {
 	// ID is the user's assigned ID
 	ID uint64 `json:"id"`
