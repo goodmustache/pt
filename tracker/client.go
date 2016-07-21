@@ -1,4 +1,4 @@
-// The tracker package is designed to work with the Pivotal Tracker V5 API:
+// Package tracker is designed to work with the Pivotal Tracker V5 API:
 // https://www.pivotaltracker.com/help/api/rest/v5
 //
 // It will provide a client and support objects that can be used to interact
