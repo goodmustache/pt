@@ -12,7 +12,7 @@ import (
 	"net/url"
 )
 
-//go:generate counterfeiter . HTTPClient
+//go:generate go run github.com/maxbrunsfeld/counterfeiter/v6 . HTTPClient
 
 // HTTPClient is based off of http.Client.
 type HTTPClient interface {

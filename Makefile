@@ -3,12 +3,15 @@ NODES ?= 4
 
 all : pt
 
-test : pt
+fakes :
+	go generate ./...
+
+test : pt fakes
 	go fmt ./...
 	go vet . ./actions ./commands ./config ./tracker
 	ginkgo -nodes $(NODES) -r -randomizeSuites -randomizeAllSpecs -race
 
-install:
+install :
 	go install .
 
 clean :
@@ -17,4 +20,4 @@ clean :
 pt : $(GO_FILES)
 	go build .
 
-.PHONY : all test install clean
+.PHONY : all fakes test install clean
