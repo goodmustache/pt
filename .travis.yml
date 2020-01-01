@@ -1,9 +1,9 @@
 language: go
 go:
-  - 1.6
+  - 1.13
 install:
   - go get -v github.com/onsi/ginkgo/ginkgo
-script: ginkgo -r -randomizeSuites -randomizeAllSpecs -race
+script: make pt test
 branches:
   only:
     - master
