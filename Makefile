@@ -1,5 +1,5 @@
 GO_FILES = $(wildcard *.go) $(wildcard */*.go)
-NODES = 4
+NODES ?= 4
 
 all : pt
 

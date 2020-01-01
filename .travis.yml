@@ -3,7 +3,7 @@ go:
   - 1.13
 install:
   - go get -v github.com/onsi/ginkgo/ginkgo
-script: make pt test
+script: NODES=2 make pt test
 branches:
   only:
     - master
