@@ -11,7 +11,7 @@ require (
 	github.com/mattn/go-runewidth v0.0.7 // indirect
 	github.com/maxbrunsfeld/counterfeiter/v6 v6.2.2
 	github.com/onsi/ginkgo v1.11.0
-	github.com/onsi/gomega v1.8.1
+	github.com/onsi/gomega v1.9.0
 	github.com/pelletier/go-toml v1.6.0 // indirect
 	github.com/spf13/afero v1.2.2 // indirect
 	github.com/spf13/cast v1.3.1 // indirect
