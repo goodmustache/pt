@@ -4,8 +4,6 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
-	"sort"
-	"strings"
 
 	"github.com/spf13/viper"
 )
@@ -73,19 +71,4 @@ func WriteConfig() error {
 	}
 
 	return viper.WriteConfig()
-}
-
-func (Config) GetUsers() ([]User, error) {
-	users := []User{}
-	for _, user := range viper.GetStringMap("users") {
-		users = append(users, user.(User))
-	}
-
-	sort.Slice(users,
-		func(i, j int) bool {
-			return strings.Compare(users[i].Username, users[j].Username) == -1
-		},
-	)
-
-	return users, nil
 }
