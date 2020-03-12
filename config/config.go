@@ -23,7 +23,7 @@ func InitConfig(configDir string) error {
 	_, err := os.Stat(configDir)
 
 	if os.IsNotExist(err) {
-		err = os.MkdirAll(configDir, 0755)
+		err = os.MkdirAll(configDir, 0700)
 		if err != nil {
 			return err
 		}
@@ -33,7 +33,7 @@ func InitConfig(configDir string) error {
 		if err != nil {
 			return err
 		}
-		f.Close()
+		return f.Close()
 	}
 
 	return err
