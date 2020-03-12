@@ -41,14 +41,14 @@ var _ = Describe("UserList", func() {
 					Email:    "test1@email.com",
 					ID:       51,
 					Name:     "Jeff",
-					Token:    "some-token",
+					APIToken: "some-token",
 					Username: "A1",
 				},
 				{
 					Email:    "test2@email.com",
 					ID:       11,
 					Name:     "Anand",
-					Token:    "some-other-token",
+					APIToken: "some-other-token",
 					Username: "A2",
 				},
 			}, nil)
@@ -57,9 +57,9 @@ var _ = Describe("UserList", func() {
 		It("displays the users in a table", func() {
 			Expect(execErr).ToNot(HaveOccurred())
 
-			Expect(testUI.STDOUT).To(Say("USERNAME\\s+NAME\\s+EMAIL"))
-			Expect(testUI.STDOUT).To(Say("A1\\s+Jeff\\s+test1@email\\.com"))
-			Expect(testUI.STDOUT).To(Say("A2\\s+Anand\\s+test2@email\\.com"))
+			Expect(testUI.STDOUT).To(Say("USER ID\\s+USERNAME\\s+NAME\\s+EMAIL"))
+			Expect(testUI.STDOUT).To(Say("51\\s+A1\\s+Jeff\\s+test1@email\\.com"))
+			Expect(testUI.STDOUT).To(Say("11\\s+A2\\s+Anand\\s+test2@email\\.com"))
 		})
 	})
 })

@@ -3,6 +3,7 @@ package command
 type CommandList struct {
 	User struct {
 		List UserList `command:"list" description:"list all known users"`
+		Add  UserAdd  `command:"add" description:"add user to local machine"`
 	} `command:"user" description:"local user related commands"`
 }
 

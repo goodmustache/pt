@@ -5,8 +5,10 @@ import (
 	"os"
 	"strings"
 
+	"github.com/goodmustache/pt/actor"
 	"github.com/goodmustache/pt/command"
 	"github.com/goodmustache/pt/config"
+	"github.com/goodmustache/pt/tracker"
 	"github.com/goodmustache/pt/ui"
 	flags "github.com/jessevdk/go-flags"
 )
@@ -40,6 +42,11 @@ func commandWrapper(cmd flags.Commander, args []string) error {
 	}
 
 	switch t := cmd.(type) {
+	case *command.UserAdd:
+		client := tracker.NewClient(tracker.Config{APIToken: t.APIToken})
+		t.Actor = actor.NewActor(client, cfg)
+		t.Config = cfg
+		t.UI = uiWrapper
 	case *command.UserList:
 		t.Config = cfg
 		t.UI = uiWrapper

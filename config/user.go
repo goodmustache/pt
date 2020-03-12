@@ -1,24 +1,35 @@
 package config
 
 import (
+	"fmt"
 	"sort"
 	"strings"
 
 	"github.com/spf13/viper"
 )
 
+const UsersKey = "users"
+
+type ConfigUsers map[string]User
+
 type User struct {
+	APIToken string
 	Email    string
-	ID       int64
+	ID       uint64
 	Name     string
-	Token    string
 	Username string
 }
 
 func (Config) GetUsers() ([]User, error) {
+	var raw ConfigUsers
+	err := viper.UnmarshalKey("users", &raw)
+	if err != nil {
+		return nil, err
+	}
+
 	users := []User{}
-	for _, user := range viper.GetStringMap("users") {
-		users = append(users, user.(User))
+	for _, user := range raw {
+		users = append(users, user)
 	}
 
 	sort.Slice(users,
@@ -28,4 +39,17 @@ func (Config) GetUsers() ([]User, error) {
 	)
 
 	return users, nil
+}
+
+func (Config) AddUser(user User) error {
+	var raw ConfigUsers
+	err := viper.UnmarshalKey("users", &raw)
+	if err != nil {
+		return err
+	}
+
+	raw[fmt.Sprint(user.ID)] = user
+
+	viper.Set("users", raw)
+	return nil
 }
