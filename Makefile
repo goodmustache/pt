@@ -11,7 +11,7 @@ fakes :
 test : pt fakes
 	go fmt ./...
 	go vet $$(go list ./... | grep -v tools)
-	ginkgo -nodes $(NODES) -r -randomizeSuites -randomizeAllSpecs -race
+	ginkgo -r -randomizeSuites -randomizeAllSpecs -race
 
 install :
 	go install .
