@@ -1,6 +1,6 @@
 package internal
 
-//go:generate go run github.com/maxbrunsfeld/counterfeiter/v6 . ConnectionWrapper
+//counterfeiter:generate . ConnectionWrapper
 
 // ConnectionWrapper can wrap a given connection allowing the wrapper to modify
 // all requests going in and out of the given connection.

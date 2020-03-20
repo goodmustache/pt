@@ -5,7 +5,7 @@ import (
 	"github.com/goodmustache/pt/command/display"
 )
 
-//go:generate go run github.com/maxbrunsfeld/counterfeiter/v6 . UserAddActor
+//counterfeiter:generate . UserAddActor
 
 type UserAddActor interface {
 	AddUser() (actor.User, error)
