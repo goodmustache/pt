@@ -1,6 +1,6 @@
 module github.com/goodmustache/pt
 
-go 1.13
+go 1.14
 
 require (
 	github.com/bmizerany/pat v0.0.0-20170815010413-6226ea591a40 // indirect
@@ -9,7 +9,7 @@ require (
 	github.com/kataras/tablewriter v0.0.0-20180708051242-e063d29b7c23 // indirect
 	github.com/landoop/tableprinter v0.0.0-20180806200924-8bd8c2576d27
 	github.com/mattn/go-runewidth v0.0.7 // indirect
-	github.com/maxbrunsfeld/counterfeiter/v6 v6.2.2
+	github.com/maxbrunsfeld/counterfeiter/v6 v6.2.3-0.20200303032533-a447b6683e1c
 	github.com/onsi/ginkgo v1.12.0
 	github.com/onsi/gomega v1.9.0
 	github.com/pelletier/go-toml v1.6.0 // indirect
