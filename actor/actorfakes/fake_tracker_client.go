@@ -21,6 +21,18 @@ type FakeTrackerClient struct {
 		result1 tracker.Me
 		result2 error
 	}
+	ProjectsStub        func() ([]tracker.Project, error)
+	projectsMutex       sync.RWMutex
+	projectsArgsForCall []struct {
+	}
+	projectsReturns struct {
+		result1 []tracker.Project
+		result2 error
+	}
+	projectsReturnsOnCall map[int]struct {
+		result1 []tracker.Project
+		result2 error
+	}
 	invocations      map[string][][]interface{}
 	invocationsMutex sync.RWMutex
 }
@@ -80,11 +92,68 @@ func (fake *FakeTrackerClient) MeReturnsOnCall(i int, result1 tracker.Me, result
 	}{result1, result2}
 }
 
+func (fake *FakeTrackerClient) Projects() ([]tracker.Project, error) {
+	fake.projectsMutex.Lock()
+	ret, specificReturn := fake.projectsReturnsOnCall[len(fake.projectsArgsForCall)]
+	fake.projectsArgsForCall = append(fake.projectsArgsForCall, struct {
+	}{})
+	fake.recordInvocation("Projects", []interface{}{})
+	fake.projectsMutex.Unlock()
+	if fake.ProjectsStub != nil {
+		return fake.ProjectsStub()
+	}
+	if specificReturn {
+		return ret.result1, ret.result2
+	}
+	fakeReturns := fake.projectsReturns
+	return fakeReturns.result1, fakeReturns.result2
+}
+
+func (fake *FakeTrackerClient) ProjectsCallCount() int {
+	fake.projectsMutex.RLock()
+	defer fake.projectsMutex.RUnlock()
+	return len(fake.projectsArgsForCall)
+}
+
+func (fake *FakeTrackerClient) ProjectsCalls(stub func() ([]tracker.Project, error)) {
+	fake.projectsMutex.Lock()
+	defer fake.projectsMutex.Unlock()
+	fake.ProjectsStub = stub
+}
+
+func (fake *FakeTrackerClient) ProjectsReturns(result1 []tracker.Project, result2 error) {
+	fake.projectsMutex.Lock()
+	defer fake.projectsMutex.Unlock()
+	fake.ProjectsStub = nil
+	fake.projectsReturns = struct {
+		result1 []tracker.Project
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeTrackerClient) ProjectsReturnsOnCall(i int, result1 []tracker.Project, result2 error) {
+	fake.projectsMutex.Lock()
+	defer fake.projectsMutex.Unlock()
+	fake.ProjectsStub = nil
+	if fake.projectsReturnsOnCall == nil {
+		fake.projectsReturnsOnCall = make(map[int]struct {
+			result1 []tracker.Project
+			result2 error
+		})
+	}
+	fake.projectsReturnsOnCall[i] = struct {
+		result1 []tracker.Project
+		result2 error
+	}{result1, result2}
+}
+
 func (fake *FakeTrackerClient) Invocations() map[string][][]interface{} {
 	fake.invocationsMutex.RLock()
 	defer fake.invocationsMutex.RUnlock()
 	fake.meMutex.RLock()
 	defer fake.meMutex.RUnlock()
+	fake.projectsMutex.RLock()
+	defer fake.projectsMutex.RUnlock()
 	copiedInvocations := map[string][][]interface{}{}
 	for key, value := range fake.invocations {
 		copiedInvocations[key] = value

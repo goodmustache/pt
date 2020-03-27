@@ -1,6 +1,7 @@
 package config
 
 import (
+	"errors"
 	"fmt"
 	"sort"
 	"strings"
@@ -18,6 +19,24 @@ type User struct {
 	ID       uint64
 	Name     string
 	Username string
+}
+
+func (Config) GetAPITokenForUser(id uint64) (string, error) {
+	var users ConfigUsers
+	err := viper.UnmarshalKey("users", &users)
+	if err != nil {
+		return "", err
+	}
+
+	if len(users) == 0 {
+		return "", errors.New("no configured users")
+	}
+
+	if user, ok := users[fmt.Sprint(id)]; ok {
+		return user.APIToken, nil
+	}
+
+	return "", errors.New("provided user id not found")
 }
 
 func (Config) GetUsers() ([]User, error) {

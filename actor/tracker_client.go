@@ -6,4 +6,5 @@ import "github.com/goodmustache/pt/tracker"
 
 type TrackerClient interface {
 	Me() (tracker.Me, error)
+	Projects() ([]tracker.Project, error)
 }

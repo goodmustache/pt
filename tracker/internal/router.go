@@ -15,11 +15,13 @@ import (
 //
 // The const name should always be the const value + Request.
 const (
-	GetMeRequest = "GetMe"
+	GetMeRequest       = "GetMe"
+	GetProjectsRequest = "GetProjects"
 )
 
 // APIRoutes is a list of routes used by the rata library to construct request
 // URLs.
 var APIRoutes = rata.Routes{
 	{Path: "/me", Method: http.MethodGet, Name: GetMeRequest},
+	{Path: "/projects", Method: http.MethodGet, Name: GetProjectsRequest},
 }

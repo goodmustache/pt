@@ -42,6 +42,14 @@ func commandWrapper(cmd flags.Commander, args []string) error {
 	}
 
 	switch t := cmd.(type) {
+	case *command.ProjectList:
+		token, err := cfg.GetAPITokenForUser(t.UserID)
+		if err != nil {
+			return err
+		}
+		client := tracker.NewClient(tracker.Config{APIToken: token})
+		t.Actor = actor.NewActor(client, cfg)
+		t.UI = uiWrapper
 	case *command.UserAdd:
 		client := tracker.NewClient(tracker.Config{APIToken: t.APIToken})
 		t.Actor = actor.NewActor(client, cfg)
