@@ -13,7 +13,7 @@ type Config struct{}
 func ConfigDir() (string, error) {
 	homeDir, err := os.UserHomeDir()
 	if err != nil {
-		return "", fmt.Errorf("Error determining user's home directory: %w", err)
+		return "", fmt.Errorf("error determining user's home directory: %w", err)
 	}
 
 	return filepath.Join(homeDir, ".config", "pt"), nil

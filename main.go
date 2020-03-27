@@ -38,7 +38,7 @@ func commandWrapper(cmd flags.Commander, args []string) error {
 	config.SetDefaultConfig()
 	cfg, err := config.ReadConfig()
 	if err != nil {
-		return fmt.Errorf("Error reading config file: %w", err)
+		return fmt.Errorf("error reading config file: %w", err)
 	}
 
 	switch t := cmd.(type) {
@@ -67,7 +67,7 @@ func commandWrapper(cmd flags.Commander, args []string) error {
 
 	err = config.WriteConfig()
 	if err != nil {
-		return fmt.Errorf("Error writing config file: %w", err)
+		return fmt.Errorf("error writing config file: %w", err)
 	}
 
 	return nil
