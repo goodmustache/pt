@@ -1,6 +1,8 @@
 package command_test
 
 import (
+	"errors"
+
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 	. "github.com/onsi/gomega/gbytes"
@@ -18,11 +20,12 @@ var _ = Describe("UserList", func() {
 
 		fakeConfig *commandfakes.FakeConfig
 		testUI     *ui.UI
+		out        *Buffer
 	)
 
 	BeforeEach(func() {
 		fakeConfig = new(commandfakes.FakeConfig)
-		testUI = ui.NewTestUI(nil, NewBuffer(), nil)
+		testUI, _, out, _ = NewTestUI()
 
 		cmd = UserList{
 			Config: fakeConfig,
@@ -57,9 +60,20 @@ var _ = Describe("UserList", func() {
 		It("displays the users in a table", func() {
 			Expect(execErr).ToNot(HaveOccurred())
 
-			Expect(testUI.STDOUT).To(Say("USER ID\\s+USERNAME\\s+NAME\\s+EMAIL"))
-			Expect(testUI.STDOUT).To(Say("51\\s+A1\\s+Jeff\\s+test1@email\\.com"))
-			Expect(testUI.STDOUT).To(Say("11\\s+A2\\s+Anand\\s+test2@email\\.com"))
+			Expect(testUI.STDOUT).To(Say(`USER ID\s+USERNAME\s+NAME\s+EMAIL`))
+			Expect(testUI.STDOUT).To(Say(`51\s+A1\s+Jeff\s+test1@email\.com`))
+			Expect(testUI.STDOUT).To(Say(`11\s+A2\s+Anand\s+test2@email\.com`))
+		})
+	})
+
+	When("getting users errors", func() {
+		BeforeEach(func() {
+			fakeConfig.GetUsersReturns(nil, errors.New("oh noes"))
+		})
+
+		It("displays the users in a table", func() {
+			Expect(execErr).To(MatchError("oh noes"))
+			Expect(out.Contents()).To(BeEmpty())
 		})
 	})
 })

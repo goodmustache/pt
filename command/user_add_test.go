@@ -21,22 +21,18 @@ var _ = Describe("UserAdd", func() {
 		fakeActor  *commandfakes.FakeUserAddActor
 		fakeConfig *commandfakes.FakeConfig
 		testUI     *ui.UI
-
-		token string
+		out        *Buffer
 	)
 
 	BeforeEach(func() {
 		fakeActor = new(commandfakes.FakeUserAddActor)
 		fakeConfig = new(commandfakes.FakeConfig)
-		testUI = ui.NewTestUI(nil, NewBuffer(), nil)
-
-		token = "some-token"
+		testUI, _, out, _ = NewTestUI()
 
 		cmd = UserAdd{
-			APIToken: token,
-			Actor:    fakeActor,
-			Config:   fakeConfig,
-			UI:       testUI,
+			Actor:  fakeActor,
+			Config: fakeConfig,
+			UI:     testUI,
 		}
 	})
 
@@ -64,8 +60,8 @@ var _ = Describe("UserAdd", func() {
 			})
 
 			It("displays the user to add", func() {
-				Expect(testUI.STDOUT).To(Say("USER ID\\s+USERNAME\\s+NAME\\s+EMAIL"))
-				Expect(testUI.STDOUT).To(Say("11\\s+A2\\s+Anand\\s+test2@email\\.com"))
+				Expect(testUI.STDOUT).To(Say(`USER ID\s+USERNAME\s+NAME\s+EMAIL`))
+				Expect(testUI.STDOUT).To(Say(`11\s+A2\s+Anand\s+test2@email\.com`))
 			})
 		})
 
@@ -76,8 +72,7 @@ var _ = Describe("UserAdd", func() {
 
 			It("doesn't error", func() {
 				Expect(execErr).To(MatchError("oh noes"))
-
-				Expect(testUI.STDOUT).ToNot(Say("USERNAME\\s+NAME\\s+EMAIL"))
+				Expect(out.Contents()).To(BeEmpty())
 			})
 		})
 	})
