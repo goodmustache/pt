@@ -11,7 +11,7 @@ import (
 
 const UsersKey = "users"
 
-type ConfigUsers map[string]User
+type Users map[string]User
 
 type User struct {
 	APIToken string
@@ -22,7 +22,7 @@ type User struct {
 }
 
 func (Config) GetAPITokenForUser(id uint64) (string, error) {
-	var users ConfigUsers
+	var users Users
 	err := viper.UnmarshalKey("users", &users)
 	if err != nil {
 		return "", err
@@ -40,7 +40,7 @@ func (Config) GetAPITokenForUser(id uint64) (string, error) {
 }
 
 func (Config) GetUsers() ([]User, error) {
-	var raw ConfigUsers
+	var raw Users
 	err := viper.UnmarshalKey("users", &raw)
 	if err != nil {
 		return nil, err
@@ -61,7 +61,7 @@ func (Config) GetUsers() ([]User, error) {
 }
 
 func (Config) AddUser(user User) error {
-	var raw ConfigUsers
+	var raw Users
 	err := viper.UnmarshalKey("users", &raw)
 	if err != nil {
 		return err
