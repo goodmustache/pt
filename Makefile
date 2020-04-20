@@ -22,4 +22,8 @@ clean :
 pt : $(GO_FILES)
 	go build .
 
+tools:
+	go get github.com/onsi/ginkgo/ginkgo
+
 .PHONY : all fakes test install clean
+.PHONY : tools
