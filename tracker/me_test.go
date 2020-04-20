@@ -2,6 +2,7 @@ package tracker_test
 
 import (
 	"net/http"
+	"time"
 
 	. "github.com/goodmustache/pt/tracker"
 	. "github.com/onsi/ginkgo"
@@ -78,12 +79,27 @@ var _ = Describe("Me", func() {
 
 			It("returns the deployment guid of the most recent deployment", func() {
 				Expect(executeErr).ToNot(HaveOccurred())
+
+				lastViewedTime, err := time.Parse(time.RFC3339, "2020-01-03T02:05:50Z")
+				Expect(err).ToNot(HaveOccurred())
 				Expect(me).To(Equal(
 					Me{
 						APIToken: "a013md020v9m2jc9ejc92m2n2s0qj200",
 						Email:    "test@example.com",
 						ID:       1010101,
 						Name:     "Anand Gaitonde",
+						Projects: []EmbeddedProject{
+							{
+								Kind:         "membership_summary",
+								ID:           9876543,
+								ProjectID:    1000001,
+								Name:         "pt",
+								Color:        "",
+								Favorite:     false,
+								Role:         "owner",
+								LastViewedAt: lastViewedTime,
+							},
+						},
 						Username: "XenoPhex",
 					},
 				))

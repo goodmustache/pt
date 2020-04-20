@@ -13,6 +13,12 @@ func (actor *Main) AddUser() (User, error) {
 		return User{}, err
 	}
 
-	err = actor.Config.AddUser(config.User(me))
+	err = actor.Config.AddUser(config.User{
+		APIToken: me.APIToken,
+		Email:    me.Email,
+		ID:       me.ID,
+		Name:     me.Name,
+		Username: me.Username,
+	})
 	return User(me), err
 }
