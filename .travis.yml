@@ -1,15 +1,11 @@
 language: go
 go:
-  - 1.13
-  - 1.14
+  - 1.22
 install:
   - go get -v github.com/onsi/ginkgo/ginkgo
 script: NODES=2 make pt test
 branches:
   only:
     - master
-addons:
-  code_climate:
-    repo_token: cde253b3c0caf533b147ca7a4273806d6eca182730398980cc6b400929b38400
 notifications:
   slack: "pt-cli:WM0nFj61ZJbaus1s0ppRh1Bw"

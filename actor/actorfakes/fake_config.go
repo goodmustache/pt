@@ -30,15 +30,16 @@ func (fake *FakeConfig) AddUser(arg1 config.User) error {
 	fake.addUserArgsForCall = append(fake.addUserArgsForCall, struct {
 		arg1 config.User
 	}{arg1})
+	stub := fake.AddUserStub
+	fakeReturns := fake.addUserReturns
 	fake.recordInvocation("AddUser", []interface{}{arg1})
 	fake.addUserMutex.Unlock()
-	if fake.AddUserStub != nil {
-		return fake.AddUserStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1
 	}
-	fakeReturns := fake.addUserReturns
 	return fakeReturns.result1
 }
 

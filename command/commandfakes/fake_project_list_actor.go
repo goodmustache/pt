@@ -30,15 +30,16 @@ func (fake *FakeProjectListActor) Projects() ([]actor.Project, error) {
 	ret, specificReturn := fake.projectsReturnsOnCall[len(fake.projectsArgsForCall)]
 	fake.projectsArgsForCall = append(fake.projectsArgsForCall, struct {
 	}{})
+	stub := fake.ProjectsStub
+	fakeReturns := fake.projectsReturns
 	fake.recordInvocation("Projects", []interface{}{})
 	fake.projectsMutex.Unlock()
-	if fake.ProjectsStub != nil {
-		return fake.ProjectsStub()
+	if stub != nil {
+		return stub()
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.projectsReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 

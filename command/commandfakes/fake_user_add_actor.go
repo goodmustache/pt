@@ -30,15 +30,16 @@ func (fake *FakeUserAddActor) AddUser() (actor.User, error) {
 	ret, specificReturn := fake.addUserReturnsOnCall[len(fake.addUserArgsForCall)]
 	fake.addUserArgsForCall = append(fake.addUserArgsForCall, struct {
 	}{})
+	stub := fake.AddUserStub
+	fakeReturns := fake.addUserReturns
 	fake.recordInvocation("AddUser", []interface{}{})
 	fake.addUserMutex.Unlock()
-	if fake.AddUserStub != nil {
-		return fake.AddUserStub()
+	if stub != nil {
+		return stub()
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.addUserReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 

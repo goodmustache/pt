@@ -42,15 +42,16 @@ func (fake *FakeTrackerClient) Me() (tracker.Me, error) {
 	ret, specificReturn := fake.meReturnsOnCall[len(fake.meArgsForCall)]
 	fake.meArgsForCall = append(fake.meArgsForCall, struct {
 	}{})
+	stub := fake.MeStub
+	fakeReturns := fake.meReturns
 	fake.recordInvocation("Me", []interface{}{})
 	fake.meMutex.Unlock()
-	if fake.MeStub != nil {
-		return fake.MeStub()
+	if stub != nil {
+		return stub()
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.meReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -97,15 +98,16 @@ func (fake *FakeTrackerClient) Projects() ([]tracker.Project, error) {
 	ret, specificReturn := fake.projectsReturnsOnCall[len(fake.projectsArgsForCall)]
 	fake.projectsArgsForCall = append(fake.projectsArgsForCall, struct {
 	}{})
+	stub := fake.ProjectsStub
+	fakeReturns := fake.projectsReturns
 	fake.recordInvocation("Projects", []interface{}{})
 	fake.projectsMutex.Unlock()
-	if fake.ProjectsStub != nil {
-		return fake.ProjectsStub()
+	if stub != nil {
+		return stub()
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.projectsReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 

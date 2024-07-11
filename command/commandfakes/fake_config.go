@@ -30,15 +30,16 @@ func (fake *FakeConfig) GetUsers() ([]config.User, error) {
 	ret, specificReturn := fake.getUsersReturnsOnCall[len(fake.getUsersArgsForCall)]
 	fake.getUsersArgsForCall = append(fake.getUsersArgsForCall, struct {
 	}{})
+	stub := fake.GetUsersStub
+	fakeReturns := fake.getUsersReturns
 	fake.recordInvocation("GetUsers", []interface{}{})
 	fake.getUsersMutex.Unlock()
-	if fake.GetUsersStub != nil {
-		return fake.GetUsersStub()
+	if stub != nil {
+		return stub()
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.getUsersReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
